@@ -26,4 +26,4 @@
 #' and open source communities by opening an issue on our home page.
 #' Check the "BugReports" field on \code{packageDescription("TruncExpFam")} for
 #' the URL.
-NULL
+"_PACKAGE"

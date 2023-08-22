@@ -67,7 +67,7 @@ parameters2natural.trunc_exp <- function(parms) {
   return(eta)
 }
 
-getGradETinv.trunc_exp <- function(eta) {
+getGradETinv.trunc_exp <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
   return(A = eta^2)

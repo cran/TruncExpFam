@@ -15,12 +15,9 @@ rtruncnbinom <- rtrunc.nbinom <- function(n, size, prob, mu, a = 0, b = Inf) {
   sampleFromTruncated(mget(ls()))
 }
 
-#' @export
 #' @importFrom stats dnbinom pnbinom
-#' @rdname dtrunc
-#' @param ... size
 #' @export
-dtruncnbinom <- dtrunc.trunc_nbinom <- function(y, eta, a = 0, b = Inf, ...) {
+dtrunc.trunc_nbinom <- function(y, eta, a = 0, b = Inf, ...) {
   nsize <- attr(y, "parameters")$size
   proba <- attr(y, "parameters")$prob
   my.dnbinom <- function(y, nsize, proba) dnbinom(y, size = nsize, prob = proba)
@@ -39,6 +36,11 @@ dtruncnbinom <- dtrunc.trunc_nbinom <- function(y, eta, a = 0, b = Inf, ...) {
   }
   return(dens / (F.b - F.a))
 }
+
+#' @rdname dtrunc
+#' @param ... size
+#' @export
+dtruncnbinom <- dtrunc.trunc_nbinom
 
 #' @export
 init.parms.trunc_nbinom <- function(y) {
@@ -73,7 +75,7 @@ parameters2natural.trunc_nbinom <- function(parms) {
   return(eta)
 }
 
-getGradETinv.trunc_nbinom <- function(eta, r) {
+getGradETinv.trunc_nbinom <- function(eta, r, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
   p <- exp(eta)

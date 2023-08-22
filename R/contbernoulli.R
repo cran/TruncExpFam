@@ -42,9 +42,8 @@ pcontbern <- function(x, lambda) {
   return(p)
 }
 
-#' @rdname dtrunc
 #' @export
-dtrunccontbern <- dtrunc.trunc_contbern <- function(y, eta, a = 0, b = 1) {
+dtrunc.trunc_contbern <- function(y, eta, a = 0, b = 1) {
   lambda <- natural2parameters.trunc_contbern(eta)
   dens <- ifelse((y <= a) | (y > b), 0, dcontbern(y, lambda = lambda))
   if (!missing(a)) {
@@ -59,6 +58,10 @@ dtrunccontbern <- dtrunc.trunc_contbern <- function(y, eta, a = 0, b = 1) {
   }
   return(dens / (F.b - F.a))
 }
+
+#' @rdname dtrunc
+#' @export
+dtrunccontbern <- dtrunc.trunc_contbern
 
 #' @export
 init.parms.trunc_contbern <- function(y) {
@@ -105,7 +108,7 @@ getYseq.trunc_contbern <- function(y, y.min = 0, y.max, n = 100) {
   return(out)
 }
 
-getGradETinv.trunc_contbern <- function(eta) {
+getGradETinv.trunc_contbern <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
   exp.eta <- exp(eta)

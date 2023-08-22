@@ -77,7 +77,7 @@ parameters2natural.trunc_binomial <- function(parms) {
   return(eta)
 }
 
-getGradETinv.trunc_binomial <- function(eta) {
+getGradETinv.trunc_binomial <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
   nsize <- attr(eta, "nsize")

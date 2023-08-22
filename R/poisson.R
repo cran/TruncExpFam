@@ -66,7 +66,7 @@ parameters2natural.trunc_poisson <- function(parms) {
   return(eta)
 }
 
-getGradETinv.trunc_poisson <- function(eta) {
+getGradETinv.trunc_poisson <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
   return(A = exp(-eta))

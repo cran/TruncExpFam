@@ -77,7 +77,7 @@ getYseq.trunc_normal <- function(y, y.min, y.max, n = 100) {
   return(out)
 }
 
-getGradETinv.trunc_normal <- function(eta) {
+getGradETinv.trunc_normal <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta' : p x p matrix
   return(A = solve(0.5 * matrix(c(-1 / eta[2], eta[1] / eta[2]^2, eta[1] / eta[2]^2, 1 / eta[2]^2 - eta[1]^2 / eta[2]^3), ncol = 2)))
