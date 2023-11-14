@@ -9,10 +9,11 @@ mlEstimationTruncDist(
   y.min = attr(y, "truncation_limits")$a,
   y.max = attr(y, "truncation_limits")$b,
   tol = 1e-05,
-  max.it = 25,
+  max.it = 100,
   delta = 0.33,
   print.iter = 0,
   ny = 100,
+  family = NULL,
   ...
 )
 }
@@ -27,11 +28,16 @@ mlEstimationTruncDist(
 
 \item{max.it}{Maximum number of iterations}
 
-\item{delta}{Indirectly, the difference between consecutive iterations to compare with the error tolerance}
+\item{delta}{Indirectly, the difference between consecutive iterations to
+compare with the error tolerance}
 
-\item{print.iter}{Determines the frequency of printing (i.e., prints every \code{print.iter} iterations)}
+\item{print.iter}{Determines the frequency of printing
+(i.e., prints every \code{print.iter} iterations)}
 
-\item{ny}{size of intermediate y range sequence. Higher values yield better estimations but slower iterations}
+\item{ny}{size of intermediate y range sequence. Higher values yield better
+estimations but slower iterations}
+
+\item{family}{distribution family to use}
 
 \item{...}{other parameters passed to subfunctions}
 }
@@ -40,10 +46,15 @@ A vector of class \code{trunc_*} containing the maximum-likelihood
 estmation of the underlying distribution * parameters.
 }
 \description{
-ML-estimation of the parameters of the distribution of the specified family, truncated at y.min and y.max
+ML-estimation of the parameters of the distribution of the
+specified family, truncated at y.min and y.max
 }
-\note{
-\code{print.iter} can be \code{TRUE}, \code{FALSE} or an integer indicating an interval for printing every \code{X} iterations.
+\details{
+If \code{print.iter = TRUE}, the function prints the iteration,
+the sum of squares of delta.eta.j (\code{delta.L2}), and the current
+parameter estimates. The \code{delta} argument of this function is a factor
+in the calculation of \code{delta.eta.j}, which in turn is a factor in the
+calculation of \code{delta.L2}.
 }
 \examples{
 sample_size <- 1000
@@ -67,7 +78,9 @@ ml_lognormal <- mlEstimationTruncDist(
 ml_lognormal
 
 # Poisson
-sample.pois <- rtrunc(n = sample_size, lambda = 10, a = 4, family = "Poisson")
+sample.pois <- rtrunc(
+ n = sample_size, lambda = 10, a = 4, family = "Poisson"
+)
 mlEstimationTruncDist(
   sample.pois,
   y.min = 4, max.it = 500, delta = 0.33,
@@ -75,7 +88,9 @@ mlEstimationTruncDist(
 )
 
 # Gamma
-sample.gamma <- rtrunc(n = sample_size, shape = 6, rate = 2, a = 2, family = "Gamma")
+sample.gamma <- rtrunc(
+ n = sample_size, shape = 6, rate = 2, a = 2, family = "Gamma"
+)
 mlEstimationTruncDist(
   sample.gamma,
   y.min = 2, max.it = 1500, delta = 0.3,
@@ -83,11 +98,15 @@ mlEstimationTruncDist(
 )
 
 # Negative binomial
-sample.nbinom <- rtruncnbinom(sample_size, size = 50, prob = .3, a = 100, b = 120)
+sample.nbinom <- rtruncnbinom(
+ sample_size, size = 50, prob = .3, a = 100, b = 120
+)
 mlEstimationTruncDist(sample.nbinom, r=10)
 }
 \references{
-Inspired by Salvador: Pueyo: "Algorithm for the maximum likelihood estimation of the parameters of the truncated normal and lognormal distributions"
+Inspired by Salvador: Pueyo: "Algorithm for the
+maximum likelihood estimation of the parameters of the truncated normal and
+lognormal distributions"
 }
 \author{
 René Holst

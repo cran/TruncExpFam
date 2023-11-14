@@ -11,20 +11,13 @@ rtruncpois <- rtrunc.poisson <- function(n, lambda, a = 0, b = Inf) {
 }
 
 #' @export
-dtrunc.trunc_poisson <- function(y, eta, a = 0, b = Inf) {
+dtrunc.trunc_poisson <- function(y, lambda, eta, a = 0, b = Inf, ...) {
+  if (missing(eta)) {
+    eta <- parameters2natural.parms_poisson(lambda)
+  }
   parm <- exp(eta)
-  dens <- ifelse((y < a) | (y > b), 0, dpois(y, parm))
-  if (!missing(a)) {
-    F.a <- ppois(a - 1, parm)
-  } else {
-    F.a <- 0
-  }
-  if (!missing(b)) {
-    F.b <- ppois(b, parm)
-  } else {
-    F.b <- 1
-  }
-  return(dens / (F.b - F.a))
+  dens <- rescaledDensities(y, a - 1, b, dpois, ppois, parm)
+  return(dens)
 }
 
 #' @rdname dtrunc
@@ -32,10 +25,10 @@ dtrunc.trunc_poisson <- function(y, eta, a = 0, b = Inf) {
 dtruncpois <- dtrunc.trunc_poisson
 
 #' @export
-init.parms.trunc_poisson <- function(y) {
+empiricalParameters.trunc_poisson <- function(y, ...) {
   # Returns empirical parameter estimate for lambda
-  parms <- mean(y)
-  class(parms) <- "trunc_poisson"
+  parms <- c("lambda" = mean(y))
+  class(parms) <- "parms_poisson"
   return(parms)
 }
 
@@ -43,30 +36,25 @@ sufficientT.trunc_poisson <- function(y) {
   return(suff.T = y)
 }
 
-averageT.trunc_poisson <- function(y) {
-  return(mean(y))
-}
-
-
 #' @export
-natural2parameters.trunc_poisson <- function(eta) {
+natural2parameters.parms_poisson <- function(eta, ...) {
   # eta: The natural parameters in a Poisson distribution
   # returns (mean,sigma)
-  lambda <- c(lambda = exp(eta))
+  if (length(eta) != 1) stop("Eta must be one single number")
+  lambda <- c(lambda = exp(eta[[1]]))
   class(lambda) <- class(eta)
   return(lambda)
 }
 
 #' @export
-parameters2natural.trunc_poisson <- function(parms) {
+parameters2natural.parms_poisson <- function(parms, ...) {
   # parms: The parameter lambda in a Poisson distribution
   # returns the natural parameters
-  eta <- log(parms)
-  class(eta) <- class(parms)
+  eta <- prepEta(log(parms), class(parms))
   return(eta)
 }
 
-getGradETinv.trunc_poisson <- function(eta, ...) {
+getGradETinv.parms_poisson <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
   return(A = exp(-eta))

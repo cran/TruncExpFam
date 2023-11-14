@@ -46,9 +46,9 @@ lnorm_all <- rtrunclnorm(n, meanlog = 0, sdlog = .7)
 set.seed(233)
 lnorm_trunc <- rtrunclnorm(n, meanlog = 0, sdlog = .7, a = 3, b = 4)
 set.seed(233)
-nbinom1_all <- rtruncnbinom(n, size = 63, prob =.62)
+nbinom1_all <- rtruncnbinom(n, size = 63, prob = .62)
 set.seed(233)
-nbinom1_trunc <- rtruncnbinom(n, size = 63, prob = .62, a=30, b=40)
+nbinom1_trunc <- rtruncnbinom(n, size = 63, prob = .62, a = 30, b = 40)
 set.seed(233)
 nbinom2_all <- rtruncnbinom(n, size = 63, mu = 6)
 set.seed(233)
@@ -79,17 +79,35 @@ pois_diff <- setdiff(pois_all, pois_trunc)
 test_that("Truncation limits are working as expected", {
   expect_setequal(beta_trunc[beta_trunc >= .2 & beta_trunc <= .6], beta_trunc)
   expect_setequal(binom_trunc[binom_trunc >= 1 & binom_trunc <= 3], binom_trunc)
-  expect_setequal(chisq_trunc[chisq_trunc >= 360 & chisq_trunc <= 390], chisq_trunc)
-  expect_setequal(contb_trunc[contb_trunc >= .4 & contb_trunc <= .7], contb_trunc)
+  expect_setequal(
+    chisq_trunc[chisq_trunc >= 360 & chisq_trunc <= 390], chisq_trunc
+  )
+  expect_setequal(
+    contb_trunc[contb_trunc >= .4 & contb_trunc <= .7], contb_trunc
+  )
   expect_setequal(exp_trunc[exp_trunc >= 4 & exp_trunc <= 7], exp_trunc)
-  expect_setequal(gamma1_trunc[gamma1_trunc >= 1.5 & gamma1_trunc <= 2], gamma1_trunc)
-  expect_setequal(gamma2_trunc[gamma2_trunc >= 7 & gamma2_trunc <= 9], gamma2_trunc)
-  expect_setequal(igamma1_trunc[igamma1_trunc >= .5 & igamma1_trunc <= .6], igamma1_trunc)
-  expect_setequal(igamma2_trunc[igamma2_trunc >= .1 & igamma2_trunc <= .2], igamma2_trunc)
-  expect_setequal(igauss_trunc[igauss_trunc >= 0 & igauss_trunc <= 1], igauss_trunc)
+  expect_setequal(
+    gamma1_trunc[gamma1_trunc >= 1.5 & gamma1_trunc <= 2], gamma1_trunc
+  )
+  expect_setequal(
+    gamma2_trunc[gamma2_trunc >= 7 & gamma2_trunc <= 9], gamma2_trunc
+  )
+  expect_setequal(
+    igamma1_trunc[igamma1_trunc >= .5 & igamma1_trunc <= .6], igamma1_trunc
+  )
+  expect_setequal(
+    igamma2_trunc[igamma2_trunc >= .1 & igamma2_trunc <= .2], igamma2_trunc
+  )
+  expect_setequal(
+    igauss_trunc[igauss_trunc >= 0 & igauss_trunc <= 1], igauss_trunc
+  )
   expect_setequal(lnorm_trunc[lnorm_trunc >= 3 & lnorm_trunc <= 4], lnorm_trunc)
-  expect_setequal(nbinom1_trunc[nbinom1_trunc >= 30 & nbinom1_trunc <= 40], nbinom1_trunc)
-  expect_setequal(nbinom2_trunc[nbinom2_trunc >= 4 & nbinom2_trunc <= 6], nbinom2_trunc)
+  expect_setequal(
+    nbinom1_trunc[nbinom1_trunc >= 30 & nbinom1_trunc <= 40], nbinom1_trunc
+  )
+  expect_setequal(
+    nbinom2_trunc[nbinom2_trunc >= 4 & nbinom2_trunc <= 6], nbinom2_trunc
+  )
   expect_setequal(norm_trunc[norm_trunc >= 50 & norm_trunc <= 99], norm_trunc)
   expect_setequal(pois_trunc[pois_trunc >= 100 & pois_trunc <= 101], pois_trunc)
   expect_true(all(beta_diff < .2 | beta_diff > .6))

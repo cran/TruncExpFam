@@ -2,7 +2,6 @@
 ##   Functions related to the Chi Square distribution    ##
 ## --##--##--##--##--##--##--##--##--##--##--##--##--##--##
 
-#' @importFrom stats rexp
 #' @param rate vector of rates
 #' @rdname rtrunc
 #' @export
@@ -12,32 +11,24 @@ rtruncexp <- rtrunc.exp <- function(n, rate = 1, a = 0, b = Inf) {
 }
 
 #' @export
-dtrunc.trunc_exp <- function(y, eta, a = 0, b = Inf) {
-  rate <- natural2parameters.trunc_exp(eta)
-  dens <- ifelse((y <= a) | (y > b), 0, dexp(y, rate = rate))
-  if (!missing(a)) {
-    F.a <- pexp(a, rate)
-  } else {
-    F.a <- 0
+dtrunc.trunc_exp <- function(y, rate = 1, eta, a = 0, b = Inf, ...) {
+  if (missing(eta)) {
+    eta <- parameters2natural.parms_exp(c("rate" = rate))
   }
-  if (!missing(b)) {
-    F.b <- pexp(b, rate)
-  } else {
-    F.b <- 1
-  }
-  return(dens / (F.b - F.a))
+  rate <- natural2parameters.parms_exp(eta)
+  dens <- rescaledDensities(y, a, b, dexp, pexp, rate)
+  return(dens)
 }
 
-#' @importFrom stats dexp pexp
 #' @rdname dtrunc
 #' @export
 dtruncexp <- dtrunc.trunc_exp
 
 #' @export
-init.parms.trunc_exp <- function(y) {
+empiricalParameters.trunc_exp <- function(y, ...) {
   # Returns empirical parameter estimate for the rate parameter
-  parms <- mean(y)
-  class(parms) <- "trunc_exp"
+  parms <- c("rate" = mean(y))
+  class(parms) <- "parms_exp"
   return(parms)
 }
 
@@ -45,29 +36,26 @@ sufficientT.trunc_exp <- function(y) {
   return(suff.T = y)
 }
 
-averageT.trunc_exp <- function(y) {
-  return(mean(y))
-}
-
 #' @export
-natural2parameters.trunc_exp <- function(eta) {
+natural2parameters.parms_exp <- function(eta, ...) {
   # eta: The natural parameters in an exponential distribution distribution
   # returns rate
-  lambda <- -eta
+  if (length(eta) != 1) stop("Eta must be one single number")
+  lambda <- c(rate = -eta[[1]])
   class(lambda) <- class(eta)
   return(lambda)
 }
 
 #' @export
-parameters2natural.trunc_exp <- function(parms) {
+parameters2natural.parms_exp <- function(parms, ...) {
   # parms: The parameter lambda in an exponential distribution
   # returns the natural parameters
-  eta <- -parms
+  eta <- c("eta" = -parms[["rate"]])
   class(eta) <- class(parms)
   return(eta)
 }
 
-getGradETinv.trunc_exp <- function(eta, ...) {
+getGradETinv.parms_exp <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
   return(A = eta^2)

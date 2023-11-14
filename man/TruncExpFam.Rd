@@ -10,10 +10,17 @@ TruncExpFam is an R package to handle truncated members from the
 exponential family.
 }
 \details{
-This package offers truncated versions of popular distribution
-functions from the stats package, as well as functions to retrieve the
-original distribution parameters from a truncated sample. For more info,
-please check \code{\link[=rtrunc]{rtrunc()}}, \code{\link[=dtrunc]{dtrunc()}} and \code{\link[=print.trunc]{print.trunc()}}.
+This package offers truncated counterparts of the density-,
+distribution-, quantile- and sampling-functions for a broad range of
+distributions from the exponential family, as implemented in the \link{stats}
+package.
+
+The package also provides functions for estimating the parameters of the
+distributions from data, given the truncation limits.
+
+For more info, please check \code{\link[=rtrunc]{rtrunc()}}, \code{\link[=dtrunc]{dtrunc()}} and \code{\link[=print.trunc]{print.trunc()}}.
+Counterparts for density and probability functions are on the roadmap for
+a future release.
 }
 \note{
 Found a bug? Want to suggest a feature? Contribute to the scientific
@@ -42,7 +49,7 @@ the URL.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/ocbe-uio/TruncExpFam}
+  \item \url{https://ocbe-uio.github.io/TruncExpFam/}
   \item Report bugs at \url{https://github.com/ocbe-uio/TruncExpFam/issues}
 }
 

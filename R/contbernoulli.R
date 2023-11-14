@@ -2,7 +2,24 @@
 ##   Functions related to the continuous Bernoulli distribution  ##
 ## --##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 
-#' @importFrom stats runif
+# Sampling function for a continuous bernoulli distribution
+# This distribution is not implemented in Base R
+# Used in the sampling of the truncated continuous bernoulli
+rcontbern <- function(n, lambda) {
+  if ((lambda < 0) || (lambda > 1)) {
+    stop("lambda must be in (0, 1)")
+  }
+  u <- runif(n)
+  if (lambda == 0.5) {
+    return(u)
+  }
+
+  # The inverse of the CDF for a cont. bernoulli distribution
+  x <- log(1 + (2 * lambda - 1) * u / (1 - lambda)) /
+    log(lambda / (1 - lambda))
+  return(x)
+}
+
 #' @param lambda mean of "parent" distribution
 #' @rdname rtrunc
 #' @export
@@ -16,47 +33,43 @@ rtrunccontbern <- rtrunc.contbern <- function(n, lambda, a = 0, b = 1) {
 # this distribution
 # dcontbern is the untruncated function (which is not present in base R)
 dcontbern <- function(x, lambda) {
-  if ((x < 0) | (x > 1)) {
-    return(0)
-  }
-  if (lambda == 0.5) {
-    norm.const <- 2
-  } else {
-    norm.const <- 2 * (atanh(1 - 2 * lambda)) / (1 - 2 * lambda)
-  }
+  norm.const <- ifelse(
+    test = lambda == 0.5,
+    yes  = 2,
+    no   = 2 * (atanh(1 - 2 * lambda)) / (1 - 2 * lambda)
+  )
   d <- norm.const * (lambda^x) * (1 - lambda) ^ (1 - x)
+  class(d) <- class(x)
   return(d)
+}
+
+qcontbern <- function(p, lambda) {
+  if (lambda == .5) {
+    return(p)
+  } else {
+    term1 <- log(2 * lambda * p - p + 1 - lambda)
+    term2 <- log(1 - lambda)
+    term3 <- log(lambda)
+    return((term1 - term2) / (term3 - term2))
+  }
 }
 
 # untruncated version (not implemented in base R)
 pcontbern <- function(x, lambda) {
-  if (x < 0) {
-    p <- 0
-  } else if (x > 1) {
-    p <- 1
-  } else if (lambda == 0.5) {
-    p <- x
-  } else {
-    p <- ((lambda^x) * (1 - lambda) ^ (1 - x) + lambda - 1) / (2 * lambda - 1)
-  }
+  p <- ((lambda^x) * (1 - lambda) ^ (1 - x) + lambda - 1) / (2 * lambda - 1)
   return(p)
 }
 
 #' @export
-dtrunc.trunc_contbern <- function(y, eta, a = 0, b = 1) {
-  lambda <- natural2parameters.trunc_contbern(eta)
-  dens <- ifelse((y <= a) | (y > b), 0, dcontbern(y, lambda = lambda))
-  if (!missing(a)) {
-    F.a <- pcontbern(a, lambda)
-  } else {
-    F.a <- 0
+dtrunc.trunc_contbern <- function(
+  y, lambda, eta, a = 0, b = 1, ...
+) {
+  if (missing(eta)) {
+    eta <- parameters2natural.parms_contbern(c("lambda" = lambda))
   }
-  if (!missing(b)) {
-    F.b <- pcontbern(b, lambda)
-  } else {
-    F.b <- 1
-  }
-  return(dens / (F.b - F.a))
+  lambda <- natural2parameters.parms_contbern(eta)
+  dens <- rescaledDensities(y, a, b, dcontbern, pcontbern, lambda)
+  return(dens)
 }
 
 #' @rdname dtrunc
@@ -64,11 +77,16 @@ dtrunc.trunc_contbern <- function(y, eta, a = 0, b = 1) {
 dtrunccontbern <- dtrunc.trunc_contbern
 
 #' @export
-init.parms.trunc_contbern <- function(y) {
+#' @param eta vector of natural parameters
+#' @rdname dtrunc
+dtrunccontbern <- dtrunc.trunc_contbern
+
+#' @export
+empiricalParameters.trunc_contbern <- function(y, ...) {
   # Returns empirical parameter estimate for the lambda parameter
   # Note: lambda cannot be expressed in closed form as a function of the mean
-  parms <- mean(y)
-  class(parms) <- "trunc_contbern"
+  parms <- c("lambda" = mean(y))
+  class(parms) <- "parms_contbern"
   return(parms)
 }
 
@@ -76,25 +94,21 @@ sufficientT.trunc_contbern <- function(y) {
   return(suff.T = y)
 }
 
-averageT.trunc_contbern <- function(y) {
-  return(mean(y))
-}
-
 #' @export
-natural2parameters.trunc_contbern <- function(eta) {
-  # eta: The natural parameters in a continuous bernoulli distribution distribution
+natural2parameters.parms_contbern <- function(eta, ...) {
+  # eta: The natural parameters in a continuous bernoulli distribution
   # returns rate
-  rate <- c(lamda = 1 / (1 + exp(-eta)))
+  if (length(eta) != 1) stop("Eta must be one single number")
+  rate <- c(lambda = 1 / (1 + exp(-eta[[1]])))
   class(rate) <- class(eta)
   return(rate)
 }
 
 #' @export
-parameters2natural.trunc_contbern <- function(parms) {
+parameters2natural.parms_contbern <- function(parms, ...) {
   # parms: The parameter lambda in a continuous bernoulli distribution
   # returns the natural parameters
-  eta <- log(parms / (1 - parms))
-  class(eta) <- class(parms)
+  eta <- prepEta(log(parms / (1 - parms)), class(parms))
   return(eta)
 }
 
@@ -108,7 +122,7 @@ getYseq.trunc_contbern <- function(y, y.min = 0, y.max, n = 100) {
   return(out)
 }
 
-getGradETinv.trunc_contbern <- function(eta, ...) {
+getGradETinv.parms_contbern <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
   exp.eta <- exp(eta)

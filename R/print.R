@@ -12,7 +12,7 @@
 #' @export
 print.trunc <- function(x, details = FALSE, ...) {
   if (!details) {
-    attributes(x) <- NULL
+    attributes(x)[(names(attributes(x)) != "names")] <- NULL
   }
   print.default(x, ...)
 }

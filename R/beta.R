@@ -3,74 +3,66 @@
 ##         Variant 1                                 ##
 ## --##--##--##--##--##--##--##--##--##--##--##--##--##
 
-#' @importFrom stats rbeta
 #' @param shape1 positive shape parameter alpha
 #' @param shape2 positive shape parameter beta
 #' @rdname rtrunc
 #' @export
-rtruncbeta <- rtrunc.beta <- function(n, shape1, shape2, a = 0, b = 1) {
+rtrunc.beta <- function(n, shape1, shape2, a = 0, b = 1) {
   class(n) <- "trunc_beta"
   sampleFromTruncated(mget(ls()))
 }
 
+#' @rdname rtrunc
 #' @export
-dtrunc.trunc_beta <- function(y, eta, a = 0, b = 1) {
-  parm <- natural2parameters.trunc_beta(eta)
-  dens <- ifelse((y < a) | (y > b), 0, dbeta(y, shape1 = parm[1], shape2 = parm[2]))
-  if (!missing(a)) {
-    F.a <- pbeta(a, shape1 = parm[1], shape2 = parm[2])
-  } else {
-    F.a <- 0
+rtruncbeta <- rtrunc.beta
+
+#' @export
+dtrunc.trunc_beta <- function(y, shape1, shape2, eta, a = 0, b = 1, ...) {
+  if (missing(eta)) {
+    eta <- parameters2natural.parms_beta(c(shape1, shape2))
   }
-  if (!missing(b)) {
-    F.b <- pbeta(b, shape1 = parm[1], shape2 = parm[2])
-  } else {
-    F.b <- 1
-  }
-  const <- 1 / (F.b - F.a)
-  return(dens * const)
+  parm <- natural2parameters.parms_beta(eta)
+  dens <- rescaledDensities(y, a, b, dbeta, pbeta, parm[1], parm[2])
+  return(dens)
 }
 
-#' @importFrom stats dbeta pbeta
 #' @rdname dtrunc
+#' @inheritParams rtrunc
 #' @export
 dtruncbeta <- dtrunc.trunc_beta
 
 #' @export
-init.parms.trunc_beta <- function(y) {
+empiricalParameters.trunc_beta <- function(y, ...) {
   # Returns  parameter estimates mean and sd
   amean <- mean(y)
   avar <- var(y)
   alpha <- amean^2 * (1 - amean) / avar - amean
   beta <- alpha * (1 / amean - 1)
   parms <- c(shape1 = alpha, shape2 = beta)
-  class(parms) <- "trunc_beta"
+  class(parms) <- "parms_beta"
   return(parms)
 }
 
 sufficientT.trunc_beta <- function(y) {
+  # Calculates the sufficient statistic T(y)
   return(suff.T = cbind(log(y), log(1 - y)))
 }
 
-averageT.trunc_beta <- function(y) {
-  return(apply(cbind(log(y), log(1 - y)), 2, mean))
-}
-
 #' @export
-natural2parameters.trunc_beta <- function(eta) {
+natural2parameters.parms_beta <- function(eta, ...) {
   # eta: The natural parameters in a beta distribution
   # returns (alpha,beta)
-  parms <- c(shape1 = eta[1], shape2 = eta[2])
+  if (length(eta) != 2) stop("Eta must be a vector of two elements")
+  parms <- c(shape1 = eta[[1]], shape2 = eta[[2]])
   class(parms) <- class(eta)
   return(parms)
 }
 
 #' @export
-parameters2natural.trunc_beta <- function(parms) {
+parameters2natural.parms_beta <- function(parms, ...) {
   # parms: The parameters shape and rate in a beta distribution
   # returns the natural parameters
-  eta <- c(shape1 = parms[1], shape2 = parms[2])
-  class(eta) <- class(parms)
+  eta <- prepEta(c(parms[1], parms[2]), class(parms))
   return(eta)
 }
 
@@ -81,15 +73,22 @@ getYseq.trunc_beta <- function(y, y.min = 0, y.max = 1, n = 100) {
   lo <- max(y.min, mean - 5 * sd)
   hi <- min(y.max, mean + 5 * sd)
   out <- seq(lo, hi, length = n)
+  out <- out[out > 0 & out < 1] # prevents NaN as sufficient statistics
   class(out) <- class(y)
   return(out)
 }
 
-getGradETinv.trunc_beta <- function(eta, ...) {
+getGradETinv.parms_beta <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta' : p x p matrix
-  term.1 <- sum(1 / (((1:10000) + eta[1]))^2)
-  term.2 <- sum(1 / (((1:10000) + eta[2]))^2)
-  term.12 <- sum(1 / (((1:10000) + eta[1] + eta[2]))^2)
-  return(A = solve(matrix(c(term.1 - term.12, -term.12, -term.12, term.2 - term.12, ncol = 2))))
+  # Uses approximation for the digamma function: digamma(x) ~ ln(x) - 1 / 2 / x
+  # Source: https://en.wikipedia.org/wiki/Digamma_function
+  # Derivatives with respect to etas calculated on wolfram alpha
+  x <- eta[1]
+  y <- eta[2]
+  term.1 <- (y * (2 * x ^ 2 + y + 2 * x * (1 + y))) / (2 * x ^ 2 * (x + y) ^ 2)
+  term.12 <- -(1 + 2 * (x + y)) / (2 * (x + y) ^ 2)
+  term.2 <- (x * (x + 2 * x * y + 2 * y * (1 + y))) / (2 * y ^ 2 * (x + y) ^ 2)
+  A_inv <- matrix(c(term.1, term.12, term.12, term.2), ncol = 2)
+  return(A = solve(A_inv))
 }

@@ -8,7 +8,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, 32, 22, .4, .6, family = "beta")
+      rtrunc(1000, 32, 22, .4, .6, family = "beta", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -18,7 +18,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, 4, .2, 2, family = "binomial")
+      rtrunc(1000, 4, .2, 2, family = "binomial", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -28,7 +28,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, 45, 40, family = "chisq")
+      rtrunc(1000, 45, 40, family = "chisq", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -38,7 +38,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, .2, .2, .7, family = "contbern")
+      rtrunc(1000, .2, .2, .7, family = "contbern", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -48,7 +48,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, 0.584, 0.5, 1, family = "exp")
+      rtrunc(1000, 0.584, 0.5, 1, family = "exp", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -58,17 +58,17 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, 45, 12, 1, 8, family = "gamma")
+      rtrunc(1000, shape = 45, rate = 12, a = 1, b = 8, family = "gamma", faster = FALSE)
     },
     expected = {
       set.seed(8)
-      rtruncgamma(1000, 45, 12, 1, 8)
+      rtruncgamma(1000, shape = 45, rate = 12, a = 1, b = 8)
     },
   )
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, shape = 45, rate = 12, a = 0.2, b = 0.3, family = "invgamma")
+      rtrunc(1000, shape = 45, rate = 12, a = 0.2, b = 0.3, family = "invgamma", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -78,7 +78,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, 38, 38, 0, 100, family = "invgauss")
+      rtrunc(1000, 38, 38, 0, 100, family = "invgauss", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -88,7 +88,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, -32, 2, family = "lognormal")
+      rtrunc(1000, -32, 2, family = "lognormal", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -98,7 +98,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, 152, .37, family = "nbinom")
+      rtrunc(1000, 152, .37, family = "nbinom", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -108,7 +108,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, 100, 200, 0, family = "normal")
+      rtrunc(1000, 100, 200, 0, family = "normal", faster = FALSE)
     },
     expected = {
       set.seed(8)
@@ -118,7 +118,7 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, 7521, 7500, family = "poisson")
+      rtrunc(1000, 7521, 7500, family = "poisson", faster = FALSE)
     },
     expected = {
       set.seed(8)

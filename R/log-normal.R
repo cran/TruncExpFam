@@ -15,26 +15,16 @@ sufficientT.trunc_lognormal <- function(y) {
   return(suff.T = cbind(log(y), log(y)^2))
 }
 
-averageT.trunc_lognormal <- function(y) {
-  return(apply(sufficientT.trunc_lognormal(y), 2, mean))
-}
-
 #' @export
-dtrunc.trunc_lognormal <- function(y, eta, a = 0, b = Inf) {
-  parm <- natural2parameters.trunc_normal(eta)
-  dens <- ifelse((y < a) | (y > b), 0, dlnorm(y, meanlog = parm[1], sdlog = parm[2]))
-  if (!missing(a)) {
-    F.a <- plnorm(a, parm[1], parm[2])
-  } else {
-    F.a <- 0
+dtrunc.trunc_lognormal <- function(
+  y, meanlog = 0, sdlog = 1, eta, a = 0, b = Inf, ...
+) {
+  if (missing(eta)) {
+    eta <- parameters2natural.parms_lognormal(c("meanlog" = meanlog, "sdlog" = sdlog))
   }
-  if (!missing(b)) {
-    F.b <- plnorm(b, parm[1], parm[2])
-  } else {
-    F.b <- 1
-  }
-  const <- 1 / (F.b - F.a)
-  return(dens  * const)
+  parm <- natural2parameters.parms_lognormal(eta)
+  dens <- rescaledDensities(y, a, b, dlnorm, plnorm, parm[1], parm[2])
+  return(dens)
 }
 
 #' @rdname dtrunc
@@ -42,12 +32,12 @@ dtrunc.trunc_lognormal <- function(y, eta, a = 0, b = Inf) {
 dtrunclnorm <- dtrunc.trunc_lognormal
 
 #' @export
-init.parms.trunc_lognormal <- function(y) {
+empiricalParameters.trunc_lognormal <- function(y, ...) {
   # Y~LN(mean,sigma) => X=log(Y)~N(mean,sigma)
   # Returns empirical parameter estimates for mean and sd
   x <- log(y)
-  parms <- c(mean = mean(x), sd = sqrt(var(x)))
-  class(parms) <- "trunc_lognormal"
+  parms <- c("meanlog" = mean(x), "sdlog" = sqrt(var(x)))
+  class(parms) <- "parms_lognormal"
   return(parms)
 }
 
@@ -63,15 +53,20 @@ getYseq.trunc_lognormal <- function(y, y.min, y.max, n = 100) {
 }
 
 #' @export
-natural2parameters.trunc_lognormal <- function(eta) {
-  natural2parameters.trunc_normal(eta)
+natural2parameters.parms_lognormal <- function(eta, ...) {
+  if (length(eta) != 2) stop("Eta must be a vector of two elements")
+  parms <- c("meanlog" = -0.5 * eta[[1]] / eta[[2]], "sdlog" = sqrt(-0.5 / eta[[2]]))
+  class(parms) <- class(eta)
+  return(parms)
 }
 
 #' @export
-parameters2natural.trunc_lognormal <- function(parms) {
-  parameters2natural.trunc_normal(parms)
+parameters2natural.parms_lognormal <- function(parms, ...) {
+  eta <- c(eta1 = parms[["meanlog"]], eta2 = -0.5) / parms[["sdlog"]]^2
+  class(eta) <- class(parms)
+  return(eta)
 }
 
-getGradETinv.trunc_lognormal <- function(eta, ...) {
-  getGradETinv.trunc_normal(eta)
+getGradETinv.parms_lognormal <- function(eta, ...) {
+  getGradETinv.parms_normal(eta, ...)
 }

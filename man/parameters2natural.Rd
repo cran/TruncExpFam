@@ -4,10 +4,12 @@
 \alias{parameters2natural}
 \title{Convert distribution parameters to natural parameters}
 \usage{
-parameters2natural(parms)
+parameters2natural(parms, ...)
 }
 \arguments{
 \item{parms}{A vector of parameters in a distribution distribution}
+
+\item{...}{other arguments passed to methods}
 }
 \value{
 A vector containing the natural parameters
@@ -18,5 +20,8 @@ Convert distribution parameters to natural parameters
 \examples{
 # Poisson distribution
 samp <- rtrunc(n = 100, lambda = 2, family = "Poisson")
-parameters2natural(init.parms(samp))
+parameters2natural(empiricalParameters(samp))
+}
+\seealso{
+\code{\link[=natural2parameters]{natural2parameters()}}
 }

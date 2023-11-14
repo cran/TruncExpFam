@@ -3,10 +3,18 @@
 #' exponential family.
 #' @docType package
 #' @name TruncExpFam
-#' @details This package offers truncated versions of popular distribution
-#' functions from the stats package, as well as functions to retrieve the
-#' original distribution parameters from a truncated sample. For more info,
-#' please check [rtrunc()], [dtrunc()] and [print.trunc()].
+#' @details This package offers truncated counterparts of the density-,
+#' distribution-, quantile- and sampling-functions for a broad range of
+#' distributions from the exponential family, as implemented in the [stats]
+#' package.
+#'
+#' The package also provides functions for estimating the parameters of the
+#' distributions from data, given the truncation limits.
+#'
+#' For more info, please check [rtrunc()], [dtrunc()] and [print.trunc()].
+#' Counterparts for density and probability functions are on the roadmap for
+#' a future release.
+#'
 #' @section Supported distributions:
 #' \itemize{
 #'  \item Beta
@@ -26,4 +34,11 @@
 #' and open source communities by opening an issue on our home page.
 #' Check the "BugReports" field on \code{packageDescription("TruncExpFam")} for
 #' the URL.
+#' @importFrom methods new is
+#' @importFrom stats dbinom dgamma dlnorm dnorm dpois pbinom pgamma plnorm pnorm
+#' ppois rbinom rgamma rlnorm rnorm rpois var dbeta pbeta rbeta dchisq pchisq
+#' qexp qgamma rchisq runif rexp dexp pexp dnbinom pnbinom rnbinom qnorm qbeta
+#' qchisq qlnorm qpois qbinom qnbinom
+#' @importFrom invgamma rinvgamma dinvgamma pinvgamma qinvgamma
+#' @importFrom rmutil rinvgauss dinvgauss pinvgauss qinvgauss
 "_PACKAGE"

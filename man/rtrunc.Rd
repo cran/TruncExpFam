@@ -2,9 +2,10 @@
 % Please edit documentation in R/a_rtrunc.R, R/beta.R, R/binomial.R, R/chisq.R,
 %   R/contbernoulli.R, R/exponential.R, R/gamma.R, R/inverse-gamma.R,
 %   R/inverse-gaussian.R, R/log-normal.R, R/negative-binomial.R, R/normal.R,
-%   R/poisson.R
+%   R/poisson.R, R/rtrunc_direct.R
 \name{rtrunc}
 \alias{rtrunc}
+\alias{rtrunc.beta}
 \alias{rtruncbeta}
 \alias{rtruncbinom}
 \alias{rtruncchisq}
@@ -17,9 +18,12 @@
 \alias{rtruncnbinom}
 \alias{rtruncnorm}
 \alias{rtruncpois}
+\alias{rtrunc_direct}
 \title{The Truncated Exponential Family}
 \usage{
-rtrunc(n, family = "gaussian", ...)
+rtrunc(n, family = "gaussian", faster = FALSE, ...)
+
+rtrunc.beta(n, shape1, shape2, a = 0, b = 1)
 
 rtruncbeta(n, shape1, shape2, a = 0, b = 1)
 
@@ -44,11 +48,16 @@ rtruncnbinom(n, size, prob, mu, a = 0, b = Inf)
 rtruncnorm(n, mean, sd, a = -Inf, b = Inf)
 
 rtruncpois(n, lambda, a = 0, b = Inf)
+
+rtrunc_direct(n, family = "gaussian", ...)
 }
 \arguments{
 \item{n}{sample size}
 
 \item{family}{distribution family to use}
+
+\item{faster}{if \code{TRUE}, samples directly from the truncated
+distribution (more info in details)}
 
 \item{...}{individual arguments to each distribution}
 
@@ -97,17 +106,27 @@ vector of one of the \code{rtrunc_*} classes containing the sample
 elements, as well as some attributes related to the chosen distribution.
 }
 \description{
-Random generation for the truncated exponential family distributions. Please ferer to the "Details" and "Examples" section for more information on how to use this function.
+Random generation for the truncated exponential family
+distributions. Please ferer to the "Details" and "Examples" section for more
+information on how to use this function.
 }
 \details{
 One way to use this function is by calling the \code{rtrunc}
 generic with the \code{family} parameter of your choice. You can also
-specifically call one of the methods (e.g. \code{rtrunc.poisson(10, lambda=3)}
+specifically call one of the methods (e.g. \code{rtruncpois(10, lambda=3)}
 instead of `rtrunc(10, family="poisson", lambda=3)). The latter is more
 flexible (i.e., easily programmable) and more robust (i.e., it contains
 better error handling and validation procedures), while the former better
 conforms with the nomenclature from other distribution-related functions in
 the \code{stats} package.
+
+Setting \code{faster=TRUE} uses a new algorithm that samples directly from
+the truncated distribution, as opposed to the old algorithm that samples
+from the untruncated distribution and then truncates the result. The
+advantage of the new algorithm is that it is way faster than the old one,
+particularly for highly-truncated distributions. On the other hand, the
+sample for untruncated distributions called through \code{rtrunc()} will no longer
+match their \code{stats}-package counterparts for the same seed.
 }
 \note{
 The current sample-generating algorithm may be slow if the distribution
@@ -117,9 +136,13 @@ details.
 }
 \examples{
 # Truncated binomial distribution
-sample.binom <- rtrunc(100, family = "binomial", prob = 0.6, size = 20, a = 4, b = 10)
+sample.binom <- rtrunc(
+  100, family = "binomial", prob = 0.6, size = 20, a = 4, b = 10
+)
 sample.binom
-plot(table(sample.binom), ylab = "Frequency", main = "Freq. of sampled values")
+plot(
+  table(sample.binom), ylab = "Frequency", main = "Freq. of sampled values"
+)
 
 # Truncated Log-Normal distribution
 sample.lognorm <- rtrunc(

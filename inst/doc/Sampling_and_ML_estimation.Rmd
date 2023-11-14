@@ -1,0 +1,143 @@
+---
+title: "Sampling and ML estimation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sampling_and_ML_estimation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Using TruncExpFam
+
+We recommend installing the stable, peer-reviewed version of TruncExpFam,
+available on CRAN:
+
+```{r install, eval=FALSE}
+install.packages("TruncExpFam")
+```
+
+After successful installation, the package can be loaded with
+
+```{r setup}
+library(TruncExpFam)
+```
+
+# Sampling from a truncated distribution
+
+TruncExpFam comes equipped with functions to generate random samples from no
+less than 12 different probability distributions from the truncated exponential
+family. You can read more about them by running `?rtrunc` on your R console.
+
+As an example, we will sample 100 values from a chi-square
+distribution with 14 degrees of freedom:
+
+```{r sample}
+x <- rtrunc(100, family = "chisq", df = 14)
+```
+
+## Different ways to do the same thing
+
+By default, however, `rtrunc()` doesn't generate a truncated distribution. As
+a matter of fact, the code above will generate the exact same sample as if
+were drawn from `stats::rchisq()`, watch:
+
+```{r stats}
+set.seed(3067)
+x2 <- rtrunc(20, "chisq", df = 14)
+
+set.seed(3067)
+x3 <- rchisq(20, 14)
+
+identical(x2, x3)
+```
+
+Oh, wait... Those objects are supposed to be identical! What happened? Let's
+investigate:
+
+```{r investigate}
+x2
+x3
+str(x2)
+str(x3)
+class(x2)
+class(x3)
+```
+
+OK, so you can tell that the generated numbers are the same, but `x2` and `x3`
+are not literally the same objects because the former has a different class.
+These `trunc_*` classes are actually very special, because they contain some
+extra information about the distribution that a simple vector does not. One
+can access such information using `print(x2, details = TRUE)`:
+
+```{r print}
+print(x2, details = TRUE)
+```
+
+Just to be sure that the sample itself matches:
+
+```{r conclusion}
+identical(as.vector(x2), x3)
+```
+
+Speaking of alternative ways to generate the same sample, for the sake of
+convenience and of users familiar with the sampling functions
+from the stats package, the wrapper function `rtruncchisq()` is also available.
+The results, as you can see below, are identical:
+
+```{r wrapper}
+set.seed(2912)
+x4 <- rtrunc(1e4, "chisq", df = 14)
+
+set.seed(2912)
+x5 <- rtruncchisq(1e4, df = 14)
+
+identical(x4, x5)
+```
+
+## Actually sampling from a truncated distribution
+
+So far, all samples generated are actually not truncated. This is because,
+by default, the truncation limits `a` and `b` are set to the limits of the
+distribution support, which are 0 and Inf for the chi-squared distribution.
+
+Let us use a simpler distribution for this second example by sampling from
+Poisson(10):
+
+```{r pois}
+y1 <- rtruncpois(1e4, 10)
+summary(y1)
+var(y1)
+```
+
+As expected, the values are all larger than 0 and the mean and variance are 10.
+If we wanted to generate instead from a Poisson(10) truncated at, say,
+8 and 20, we would run:
+
+```{r truncate}
+y2 <- rtruncpois(1e4, 10, a = 9, b = 20)
+summary(y2)
+var(y2)
+```
+
+Notice how, even with a large sample, the observed mean and variance are still
+quite far from 10.
+
+# Recovering the original parameters
+
+One reliable method of estimating the original lambda used to generate `y2` is
+by running the `mlEstimationTruncDist()` function:
+
+```{r ml}
+lambda <- mlEstimationTruncDist(y2, print.iter = TRUE)
+lambda
+```
+
+More information about that function and how you can tweak it is available on
+`?mlEstimationTruncDist`.

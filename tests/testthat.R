@@ -1,4 +1,1 @@
-library(testthat)
-library(TruncExpFam)
-
-test_check("TruncExpFam")
+testthat::test_check("TruncExpFam")

@@ -14,20 +14,21 @@ test_that("It's OK to miss truncation limits", {
     "pois" = rtrunc(3, family = "poisson", lambda = 1)
   )
   expect_equal(
-    object   = dtrunc(samp$norm, eta = c(10, -2)),
-    expected = c(6.357392e-06, 6.271760e-07, 9.013280e-11)
+    object   = as.vector(dtrunc(samp$norm, eta = c(10, -2))),
+    expected = c(6.357392e-06, 6.271760e-07, 9.013280e-11),
+    check.attributes = FALSE
   )
   expect_equal(
-    object   = dtrunc(samp$gamm, eta = c(10, -2)),
+    object   = as.vector(dtrunc(samp$gamm, eta = c(10, -2))),
     expected = c(0.09401543, 0.23025945, 0.14131485)
   )
   expect_equal(
-    object   = dtrunc(samp$logn, eta = c(10, -2)),
+    object   = as.vector(dtrunc(samp$logn, eta = c(10, -2))),
     expected = c(2.094700e-03, 9.567618e-09, 7.123690e-02)
   )
 
   expect_equal(
-    object = dtrunc(samp$pois, eta = -10),
+    object = as.vector(dtrunc(samp$pois, eta = -10)),
     expected = c(9.999546e-01, 1.030530e-09, 4.539787e-05)
   )
 })
@@ -52,6 +53,7 @@ test_that("Passing wrong parameters is handled correctly", {
   expect_error(rtruncchisq(1, df = -14), msg)
   expect_error(rtrunc(1, family = "contbern", lambda = 1.4), msg)
   expect_error(rtrunc(1, family = "contbern", lambda = -14), msg)
+  expect_error(rcontbern(1, lambda = 1.4), "lambda must be in \\(0, 1\\)")
   expect_error(rtrunccontbern(1, lambda = 1.4), msg)
   expect_error(rtrunccontbern(1, lambda = -14), msg)
   expect_error(rtrunc(1, family = "exp", rate = -14), msg)
@@ -130,4 +132,64 @@ test_that("Passing wrong parameters is handled correctly", {
   expect_error(rtrunclnorm(1, mean = 4i, sd = -1), msg)
   expect_error(rtrunc(1, family = "poisson", lambda = -14), msg)
   expect_error(rtruncpois(1, lambda = -14), msg)
+})
+
+test_that("Passing too many parameters", {
+  expect_error(
+    object = rtruncgamma(1, shape = 5, rate = 8, scale = 7),
+    regexp = "specify 'rate' or 'scale' but not both"
+    )
+})
+
+test_that("Only passing some parameters is OK", {
+  set.seed(6)
+  x1 <- rtrunc(n = 1e3, family = "gaussian", mean = 50, sd = 12, a = 40, b = 60)
+  set.seed(6)
+  x2 <- rtrunc(1e3, "gaussian", FALSE, 50, 12, 40, 60)
+  set.seed(6)
+  x3 <- rtrunc(1e3, family = "gaussian", mean = 50, sd = 12, a = 40, b = 60)
+  set.seed(6)
+  x4 <- rtrunc(n = 1e3, "gaussian", mean = 50, sd = 12, a = 40, b = 60)
+
+  expect_warning(
+    rtrunc(n = 1e3, family = "gaussian",  FALSE, 50, sd = 12, a = 40, b = 60)
+  )
+  expect_warning(
+    rtrunc(n = 1e3, family = "gaussian",  FALSE, mean = 50, 12, a = 40, b = 60)
+  )
+  expect_warning(
+    rtrunc(n = 1e3, family = "gaussian",  FALSE, mean = 50, sd = 12, 40, b = 60)
+  )
+  expect_warning(
+    rtrunc(n = 1e3, family = "gaussian",  FALSE, mean = 50, sd = 12, a = 40, 60)
+  )
+
+  set.seed(6)
+  x5 <- suppressWarnings(
+    rtrunc(n = 1e3, family = "gaussian",  FALSE, 50, sd = 12, a = 40, b = 60)
+  )
+  set.seed(6)
+  x6 <- suppressWarnings(
+    rtrunc(n = 1e3, family = "gaussian",  FALSE, mean = 50, 12, a = 40, b = 60)
+  )
+  set.seed(6)
+  x7 <- suppressWarnings(
+    rtrunc(n = 1e3, family = "gaussian",  FALSE, mean = 50, sd = 12, 40, b = 60)
+  )
+  set.seed(6)
+  x8 <- suppressWarnings(
+    rtrunc(n = 1e3, family = "gaussian",  FALSE, mean = 50, sd = 12, a = 40, 60)
+  )
+
+  expect_equal(x1, x2)
+  expect_equal(x1, x3)
+  expect_equal(x1, x4)
+  expect_equal(x1, x5)
+  expect_equal(x1, x6)
+  expect_equal(x1, x7)
+  expect_equal(x1, x8)
+
+  expect_equal(
+    unclass(mlEstimationTruncDist(x1)), c("mean" = 50, "sd" = 12), tol = 1e-1
+  )
 })

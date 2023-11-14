@@ -12,6 +12,8 @@ x_igm1 <- rtrunc(10, family = "invgamma", shape = 8, rate = 5)
 x_igm2 <- rtrunc(10, family = "invgamma", shape = 8, scale = 5)
 x_inor <- rtrunc(10, family = "invgauss", m = 5, s = 4)
 x_norm <- rtrunc(10, family = "normal", mean = 23, sd = 5)
+x_lnrm <- rtrunc(10, family = "lognormal", meanlog = 23, sdlog = 5)
+x_nbin <- rtrunc(10, family = "nbinom", size = 5, prob = .3)
 x_pois <- rtrunc(10, family = "poisson", lambda = 85)
 
 test_that("Printing options are respected", {
@@ -29,6 +31,8 @@ test_that("Printing options are respected", {
   expect_length(capture_output_lines(attributes(print(x_igm2))), 2)
   expect_length(capture_output_lines(attributes(print(x_inor))), 2)
   expect_length(capture_output_lines(attributes(print(x_norm))), 2)
+  expect_length(capture_output_lines(attributes(print(x_lnrm))), 2)
+  expect_length(capture_output_lines(attributes(print(x_nbin))), 1)
   expect_length(capture_output_lines(attributes(print(x_pois))), 1)
 
   # Check if details=TRUE displays the attributes ---------- #
@@ -44,5 +48,7 @@ test_that("Printing options are respected", {
   expect_output(print(x_igm2, details = TRUE), 'attr\\(,\"parameters\"\\)')
   expect_output(print(x_inor, details = TRUE), 'attr\\(,\"parameters\"\\)')
   expect_output(print(x_norm, details = TRUE), 'attr\\(,\"parameters\"\\)')
+  expect_output(print(x_lnrm, details = TRUE), 'attr\\(,\"parameters\"\\)')
+  expect_output(print(x_nbin, details = TRUE), 'attr\\(,\"parameters\"\\)')
   expect_output(print(x_pois, details = TRUE), 'attr\\(,\"parameters\"\\)')
 })

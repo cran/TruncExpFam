@@ -5,8 +5,12 @@ test_that("Impossible truncation limits are rejected", {
   higher <- "must be higher"
   same <- "Identical truncation limits"
   nocomplex <- "may not contain complex numbers"
-  expect_error(rtrunc(1, family = "beta", shape1 = 8, shape2 = 2, a = .5, b = .5), same)
-  expect_error(rtrunc(1, family = "beta", shape1 = 8, shape2 = 2, a = 1, b = .7), sub)
+  expect_error(
+    rtrunc(1, family = "beta", shape1 = 8, shape2 = 2, a = .5, b = .5), same
+  )
+  expect_error(
+    rtrunc(1, family = "beta", shape1 = 8, shape2 = 2, a = 1, b = .7), sub
+  )
   expect_error(rtruncbeta(1, shape1 = 8, shape2 = 2, a = 1, b = .7), sub)
   expect_error(rtruncbeta(1, shape1 = 8, shape2 = 2, a = .7, b = .6), higher)
   expect_error(rtruncbeta(1, shape1 = 8, shape2 = 2, a = .6, b = .6), same)
@@ -64,6 +68,11 @@ test_that("Edge cases are treated correctly", {
   n <- 10
   expect_setequal(suppressWarnings(rtruncbinom(n, 3, .4, -3, 0)), rep(0, n))
   expect_setequal(suppressWarnings(rtruncbinom(n, 3, .4, 3, 4)), rep(3, n))
-  expect_setequal(suppressWarnings(rtruncnbinom(n, size = 3, prob = .4, a = -3, b = 0)), rep(0, n))
+  expect_setequal(
+    suppressWarnings(
+      rtruncnbinom(n, size = 3, prob = .4, a = -3, b = 0)
+    ),
+    rep(0, n)
+  )
   expect_setequal(suppressWarnings(rtruncpois(10, 4, -1, 0)), rep(0, n))
 })
