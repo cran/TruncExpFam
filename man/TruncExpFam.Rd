@@ -2,8 +2,8 @@
 % Please edit documentation in R/TruncExpFam-package.R
 \docType{package}
 \name{TruncExpFam}
-\alias{TruncExpFam}
 \alias{TruncExpFam-package}
+\alias{TruncExpFam}
 \title{Truncated Exponential Family}
 \description{
 TruncExpFam is an R package to handle truncated members from the

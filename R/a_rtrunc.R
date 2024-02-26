@@ -88,7 +88,7 @@ rtrunc <- function(n, family = "gaussian", faster = FALSE, ...) {
 
   # Generating sample --------------------------------------------------------
   if (faster) {
-    sample <- rtrunc_direct(n, family, ...)
+    sample <- rtrunc_direct(n, family, parms, ...)
   } else {
     sample <- rtrunc.generic(n, ...)
   }

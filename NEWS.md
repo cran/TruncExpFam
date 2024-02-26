@@ -1,3 +1,7 @@
+# TruncExpFam 1.1.1
+
+* Fixed `UseMethod()` no longer forwarding local variables from the generic on R-devel (issue #103)
+
 # TruncExpFam 1.1.0
 
 * Added a `NEWS.md` file to track changes to the package.

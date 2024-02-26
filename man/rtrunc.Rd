@@ -49,7 +49,7 @@ rtruncnorm(n, mean, sd, a = -Inf, b = Inf)
 
 rtruncpois(n, lambda, a = 0, b = Inf)
 
-rtrunc_direct(n, family = "gaussian", ...)
+rtrunc_direct(n, family = "gaussian", parms, ...)
 }
 \arguments{
 \item{n}{sample size}
@@ -98,6 +98,8 @@ distribution). Must be strictly positive, need not be integer.}
 \item{mean}{mean of parent distribution}
 
 \item{sd}{standard deviation is parent distribution}
+
+\item{parms}{list of distribution parameters}
 }
 \value{
 A sample of size n drawn from a truncated distribution
