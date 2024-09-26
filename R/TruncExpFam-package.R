@@ -32,7 +32,7 @@
 #' }
 #' @note Found a bug? Want to suggest a feature? Contribute to the scientific
 #' and open source communities by opening an issue on our home page.
-#' Check the "BugReports" field on \code{packageDescription("TruncExpFam")} for
+#' Check the "BugReports" field on `packageDescription("TruncExpFam")` for
 #' the URL.
 #' @importFrom methods new is
 #' @importFrom stats dbinom dgamma dlnorm dnorm dpois pbinom pgamma plnorm pnorm

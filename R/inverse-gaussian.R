@@ -6,10 +6,18 @@
 #' @param s vector of dispersion parameters
 #' @rdname rtrunc
 #' @export
-rtruncinvgauss <- rtrunc.invgauss <- function(n, m, s, a = 0, b = Inf) {
+rtruncinvgauss <- function(n, m, s, a = 0, b = Inf, faster = FALSE) {
   class(n) <- "trunc_invgauss"
-  sampleFromTruncated(mget(ls()))
+  if (faster) {
+    family <- gsub("trunc_", "", class(n))
+    parms <- mget(ls())[grep("^faster$|^n$|^family$", ls(), invert = TRUE)]
+    return(rtrunc_direct(n, family, parms, a, b))
+  } else {
+    parms <- mget(ls())[grep("^faster$", ls(), invert = TRUE)]
+    return(sampleFromTruncated(parms))
+  }
 }
+rtrunc.invgauss <- rtruncinvgauss
 
 #' @export
 dtrunc.trunc_invgauss <- function(y, m, s, eta, a = 0, b = Inf, ...) {
@@ -33,11 +41,12 @@ empiricalParameters.trunc_invgauss <- function(y, ...) {
   lambda <- mean ^ 3 / sd ^ 2
   parms <- c(m = mean, s = 1 / lambda)
   class(parms) <- "parms_invgauss"
-  return(parms)
+  parms
 }
 
+#' @method sufficientT trunc_invgauss
 sufficientT.trunc_invgauss <- function(y) {
-  return(suff.T = cbind(y, 1 / y))
+  cbind(y, 1 / y)
 }
 
 #' @export
@@ -48,7 +57,7 @@ parameters2natural.parms_invgauss <- function(parms, ...) {
   lambda <- 1 / parms[["s"]]
   eta <- c(eta1 = -lambda / (2 * mu ^ 2), eta2 = -lambda / 2)
   class(eta) <- class(parms)
-  return(eta)
+  eta
 }
 
 #' @export
@@ -60,9 +69,10 @@ natural2parameters.parms_invgauss <- function(eta, ...) {
   lambda <- -2 * eta[[2]]
   parms <- c(m = mu, s = 1 / lambda)
   class(parms) <- class(eta)
-  return(parms)
+  parms
 }
 
+#' @method getYseq trunc_invgauss
 getYseq.trunc_invgauss <- function(y, y.min, y.max, n = 100) {
   m <- mean(y, na.rm = TRUE)
   sd <- sd(y, na.rm = TRUE)
@@ -74,6 +84,7 @@ getYseq.trunc_invgauss <- function(y, y.min, y.max, n = 100) {
   return(out)
 }
 
+#' @method getGradETinv parms_invgauss
 getGradETinv.parms_invgauss <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta' : p x p matrix
@@ -82,5 +93,5 @@ getGradETinv.parms_invgauss <- function(eta, ...) {
   mx_21 <- mx_12
   mx_22 <- (1 - eta[1] * sqrt(eta[2] / eta[1])) / (eta[2] ^ 2)
   A_inv <- 0.5 * matrix(c(mx_11, mx_12, mx_21, mx_22), ncol = 2)
-  return(A = solve(A_inv))
+  A <- solve(A_inv)
 }

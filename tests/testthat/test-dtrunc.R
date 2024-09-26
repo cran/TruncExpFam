@@ -23,9 +23,13 @@ test_that("dtrunc* works like its stats counterpart", {
   expect_equal(dtrunc(sample$contbern, .4), dcontbern(sample$contbern, .4))
   expect_equal(dtrunc(sample$exp), dexp(sample$exp))
   expect_equal(dtrunc(sample$gamma, 6, 2), dgamma(sample$gamma, 6, 2))
-  expect_equal(dtrunc(sample$invgamma, 23, 24), dinvgamma(sample$invgamma, 23, 24))
+  expect_equal(
+    dtrunc(sample$invgamma, 23, 24), dinvgamma(sample$invgamma, 23, 24)
+  )
   expect_equal(dtrunc(sample$invgauss, 3, 1), dinvgauss(sample$invgauss, 3, 1))
-  expect_equal(dtrunc(sample$lognormal, 2.5, .5), dlnorm(sample$lognormal, 2.5, .5))
+  expect_equal(
+    dtrunc(sample$lognormal, 2.5, .5), dlnorm(sample$lognormal, 2.5, .5)
+  )
   expect_equal(dtrunc(sample$nbinom, 50, .3), dnbinom(sample$nbinom, 50, .3))
   expect_equal(dtrunc(sample$normal), dnorm(sample$normal))
   expect_equal(dtrunc(sample$poisson, 10), dpois(sample$poisson, 10))

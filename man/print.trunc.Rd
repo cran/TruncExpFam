@@ -23,10 +23,10 @@
 
 \item{details}{if \code{FALSE} (default), hides the attributes of \code{x}}
 
-\item{...}{other arguments passed to print.default}
+\item{...}{other arguments passed to \code{\link[base:print.default]{base::print.default()}}}
 }
 \value{
-x with or without its attributes
+\code{x} with or without its attributes
 }
 \description{
 Special printing methods for trunc_* classes.

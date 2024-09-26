@@ -1,9 +1,9 @@
 #' @title Print sample from truncated distribution
 #' @description Special printing methods for trunc_* classes.
 #' @param x object to print
-#' @param details if \code{FALSE} (default), hides the attributes of \code{x}
-#' @param ... other arguments passed to print.default
-#' @return x with or without its attributes
+#' @param details if `FALSE` (default), hides the attributes of `x`
+#' @param ... other arguments passed to [base::print.default()]
+#' @return `x` with or without its attributes
 #' @author Waldir Leoncio
 #' @aliases print.trunc_beta print.trunc_binomial print.trunc_chisq
 #' print.trunc_contbern print.trunc_exp print.trunc_gamma print.trunc_invgamma

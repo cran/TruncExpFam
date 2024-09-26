@@ -5,10 +5,18 @@
 #' @param rate vector of rates
 #' @rdname rtrunc
 #' @export
-rtruncexp <- rtrunc.exp <- function(n, rate = 1, a = 0, b = Inf) {
+rtruncexp <- function(n, rate = 1, a = 0, b = Inf, faster = FALSE) {
   class(n) <- "trunc_exp"
-  sampleFromTruncated(mget(ls()))
+  if (faster) {
+    family <- gsub("trunc_", "", class(n))
+    parms <- mget(ls())[grep("^faster$|^n$|^family$", ls(), invert = TRUE)]
+    return(rtrunc_direct(n, family, parms, a, b))
+  } else {
+    parms <- mget(ls())[grep("^faster$", ls(), invert = TRUE)]
+    return(sampleFromTruncated(parms))
+  }
 }
+rtrunc.exp <- rtruncexp
 
 #' @export
 dtrunc.trunc_exp <- function(y, rate = 1, eta, a = 0, b = Inf, ...) {
@@ -29,11 +37,12 @@ empiricalParameters.trunc_exp <- function(y, ...) {
   # Returns empirical parameter estimate for the rate parameter
   parms <- c("rate" = mean(y))
   class(parms) <- "parms_exp"
-  return(parms)
+  parms
 }
 
+#' @method sufficientT trunc_exp
 sufficientT.trunc_exp <- function(y) {
-  return(suff.T = y)
+  y
 }
 
 #' @export
@@ -43,7 +52,7 @@ natural2parameters.parms_exp <- function(eta, ...) {
   if (length(eta) != 1) stop("Eta must be one single number")
   lambda <- c(rate = -eta[[1]])
   class(lambda) <- class(eta)
-  return(lambda)
+  lambda
 }
 
 #' @export
@@ -52,15 +61,17 @@ parameters2natural.parms_exp <- function(parms, ...) {
   # returns the natural parameters
   eta <- c("eta" = -parms[["rate"]])
   class(eta) <- class(parms)
-  return(eta)
+  eta
 }
 
+#' @method getGradETinv parms_exp
 getGradETinv.parms_exp <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
-  return(A = eta^2)
+  eta^2
 }
 
+#' @method getYseq trunc_exp
 getYseq.trunc_exp <- function(y, y.min = 0, y.max, n = 100) {
   mean <- mean(y, na.rm = TRUE)
   var.y <- var(y, na.rm = TRUE)

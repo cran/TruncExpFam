@@ -5,5 +5,5 @@ attachDistroAttributes <- function(sample, family, parms) {
     attr(sample, "truncation_limits") <- parms[c("a", "b")]
     attr(sample, "continuous") <- family_attributes$cont
   }
-  return(sample)
+  sample
 }

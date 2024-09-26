@@ -20,9 +20,9 @@ mlEstimationTruncDist(
 \arguments{
 \item{y}{Sequence spanning the domain of the truncated distribution}
 
-\item{y.min}{Lower bound for y}
+\item{y.min}{Lower bound for \code{y}}
 
-\item{y.max}{Upper bound for y}
+\item{y.max}{Upper bound for \code{y}}
 
 \item{tol}{Error tolerance for parameter estimation}
 
@@ -34,7 +34,7 @@ compare with the error tolerance}
 \item{print.iter}{Determines the frequency of printing
 (i.e., prints every \code{print.iter} iterations)}
 
-\item{ny}{size of intermediate y range sequence. Higher values yield better
+\item{ny}{size of intermediate \code{y} range sequence. Higher values yield better
 estimations but slower iterations}
 
 \item{family}{distribution family to use}
@@ -42,8 +42,8 @@ estimations but slower iterations}
 \item{...}{other parameters passed to subfunctions}
 }
 \value{
-A vector of class \code{trunc_*} containing the maximum-likelihood
-estmation of the underlying distribution * parameters.
+A vector of class \verb{trunc_*} containing the maximum-likelihood
+estimation of the underlying distribution * parameters.
 }
 \description{
 ML-estimation of the parameters of the distribution of the
@@ -51,7 +51,7 @@ specified family, truncated at y.min and y.max
 }
 \details{
 If \code{print.iter = TRUE}, the function prints the iteration,
-the sum of squares of delta.eta.j (\code{delta.L2}), and the current
+the sum of squares of \code{delta.eta.j} (\code{delta.L2}), and the current
 parameter estimates. The \code{delta} argument of this function is a factor
 in the calculation of \code{delta.eta.j}, which in turn is a factor in the
 calculation of \code{delta.L2}.

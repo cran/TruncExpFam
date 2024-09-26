@@ -23,16 +23,16 @@ test_that("Estimation works, in general", {
     mlEstimationTruncDist(cont01, family = "beta"), c("shape1", "shape2")
   )
   expect_named(
-    mlEstimationTruncDist(disc0inf, family = "binomial"), c("prob")
+    mlEstimationTruncDist(disc0inf, family = "binomial"), "prob"
   )
   expect_named(
-    mlEstimationTruncDist(cont0inf, family = "chisq"), c("df")
+    mlEstimationTruncDist(cont0inf, family = "chisq"), "df"
   )
   expect_named(
-    mlEstimationTruncDist(cont01b, family = "contbern"), c("lambda")
+    mlEstimationTruncDist(cont01b, family = "contbern"), "lambda"
   )
   expect_named(
-    mlEstimationTruncDist(cont0infb, family = "exp"), c("rate")
+    mlEstimationTruncDist(cont0infb, family = "exp"), "rate"
   )
   expect_named(
     mlEstimationTruncDist(cont0inf, family = "gamma"), c("shape", "rate")
@@ -47,13 +47,13 @@ test_that("Estimation works, in general", {
     mlEstimationTruncDist(cont0inf, family = "lognormal"), c("meanlog", "sdlog")
   )
   expect_named(
-    mlEstimationTruncDist(disc0inf, family = "nbinom"), c("mean")
+    mlEstimationTruncDist(disc0inf, family = "nbinom"), "mean"
   )
   expect_named(
     mlEstimationTruncDist(contReal, family = "normal"), c("mean", "sd")
   )
   expect_named(
-    mlEstimationTruncDist(disc0inf, family = "poisson"), c("lambda")
+    mlEstimationTruncDist(disc0inf, family = "poisson"), "lambda"
   )
 })
 

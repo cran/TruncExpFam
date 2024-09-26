@@ -9,10 +9,22 @@
 #' @param mu alternative parametrization via mean
 #' @rdname rtrunc
 #' @export
-rtruncnbinom <- rtrunc.nbinom <- function(n, size, prob, mu, a = 0, b = Inf) {
+rtruncnbinom <- function(n, size, prob, mu, a = 0, b = Inf, faster = FALSE) {
   class(n) <- "trunc_nbinom"
-  sampleFromTruncated(mget(ls()))
+  if (missing(prob)) {
+    prob <- (size) / (size + mu)
+    mu <- ""
+  }
+  if (faster) {
+    family <- gsub("trunc_", "", class(n))
+    parms <- mget(ls())[grep("^faster$|^n$|^family$|^mu$", ls(), invert = TRUE)]
+    return(rtrunc_direct(n, family, parms, a, b))
+  } else {
+    parms <- mget(ls())[grep("^faster$", ls(), invert = TRUE)]
+    return(sampleFromTruncated(parms))
+  }
 }
+rtrunc.nbinom <- rtruncnbinom
 
 #' @rdname dtrunc
 #' @param ... size
@@ -47,11 +59,12 @@ empiricalParameters.trunc_nbinom <- function(y, r, k, ...) {
     parms <- c("size" = r, "prob" = (r - 1) / (r + k - 1))
   }
   class(parms) <- "parms_nbinom"
-  return(parms)
+  parms
 }
 
+#' @method sufficientT trunc_nbinom
 sufficientT.trunc_nbinom <- function(y) {
-  return(suff.T = y)
+  suff.T <- y
 }
 
 #' @export
@@ -59,7 +72,7 @@ natural2parameters.parms_nbinom <- function(eta, ...) {
   # eta: The natural parameters in a negative binomial distribution
   p <- c(mean = exp(eta))
   class(p) <- class(eta)
-  return(p)
+  p
 }
 
 #' @export
@@ -72,9 +85,9 @@ parameters2natural.parms_nbinom <- function(parms, ...) {
     mean <- parms[["mean"]]
   }
   eta <- prepEta(log(mean), class(parms))
-  return(eta)
 }
 
+#' @method getGradETinv parms_nbinom
 getGradETinv.parms_nbinom <- function(eta, r = 1e3, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
@@ -84,6 +97,7 @@ getGradETinv.parms_nbinom <- function(eta, r = 1e3, ...) {
   return(A)
 }
 
+#' @method getYseq trunc_nbinom
 getYseq.trunc_nbinom <- function(y, y.min = 0, y.max, n = 100) {
   mean <- mean(y, na.rm = TRUE)
   var.y <- var(y, na.rm = TRUE)

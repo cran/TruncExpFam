@@ -6,10 +6,18 @@
 #' @param prob probability of success on each trial
 #' @rdname rtrunc
 #' @export
-rtruncbinom <- rtrunc.binomial <- function(n, size, prob, a = 0, b = size) {
+rtruncbinom <- function(n, size, prob, a = 0, b = size, faster = FALSE) {
   class(n) <- "trunc_binomial"
-  sampleFromTruncated(mget(ls()))
+  if (faster) {
+    family <- gsub("trunc_", "", class(n))
+    parms <- mget(ls())[grep("^faster$|^n$|^family$", ls(), invert = TRUE)]
+    return(rtrunc_direct(n, family, parms, a, b))
+  } else {
+    parms <- mget(ls())[grep("^faster$", ls(), invert = TRUE)]
+    return(sampleFromTruncated(parms))
+  }
 }
+rtrunc.binomial <- rtruncbinom
 
 #' @export
 dtrunc.trunc_binomial <- function(
@@ -19,12 +27,10 @@ dtrunc.trunc_binomial <- function(
     eta <- parameters2natural.parms_binomial(c("size" = size, "prob" = prob))
   }
   nsize <- attr(y, "parameters")$size
-  my.dbinom <- function(nsize) dbinom(y, size = nsize, prob = proba)
-  my.pbinom <- function(z, nsize) pbinom(z, size = nsize, prob = proba)
   proba <- 1 / (1 + exp(-eta))
-  dens <- ifelse((y < a) | (y > b), 0, my.dbinom(nsize))
-  F.a <- my.pbinom(a - 1, nsize)
-  F.b <- my.pbinom(b, nsize)
+  dens <- ifelse((y < a) | (y > b), 0, dbinom(y, size = nsize, prob = proba))
+  F.a <- pbinom(a - 1L, size = nsize, prob = proba) # -1 bc a = 0 is no trunc
+  F.b <- pbinom(b, size = nsize, prob = proba)
   dens <- dens / (F.b - F.a)
   attributes(dens) <- attributes(y)
   return(dens)
@@ -43,11 +49,12 @@ empiricalParameters.trunc_binomial <- function(y, size, ...) {
   }
   parms <- c("size" = size, "prob" = mean(y) / size)
   class(parms) <- "parms_binomial"
-  return(parms)
+  parms
 }
 
+#' @method sufficientT trunc_binomial
 sufficientT.trunc_binomial <- function(y) {
-  return(suff.T = y)
+  suff.T <- y
 }
 
 #' @export
@@ -57,7 +64,7 @@ natural2parameters.parms_binomial <- function(eta, ...) {
   if (length(eta) != 1) stop("Eta must be one single number")
   p <- c(prob = 1 / (1 + exp(-eta[[1]])))
   class(p) <- class(eta)
-  return(p)
+  p
 }
 
 #' @export
@@ -67,17 +74,19 @@ parameters2natural.parms_binomial <- function(parms, ...) {
   prob <- parms[["prob"]]
   eta <- prepEta(log(prob / (1 - prob)), class(parms))
   attr(eta, "nsize") <- parms[["size"]]
-  return(eta)
+  eta
 }
 
+#' @method getGradETinv parms_binomial
 getGradETinv.parms_binomial <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
   nsize <- attr(eta, "nsize")
   exp.eta <- exp(eta)
-  return(A = ((1 + exp.eta)^2 / exp.eta) / nsize)
+  ((1 + exp.eta)^2 / exp.eta) / nsize
 }
 
+#' @method getYseq trunc_binomial
 getYseq.trunc_binomial <- function(y, y.min = 0, y.max, n = 100) {
   nsize <- attr(y, "parameters")$size
   y.lo <- round(y.min)

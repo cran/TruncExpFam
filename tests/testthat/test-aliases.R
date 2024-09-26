@@ -2,7 +2,7 @@
 # rtrunc methods vs aliases                                #
 # ======================================================== #
 
-context("Matching output of rtrunc aliases")
+context("Matching output of rtrunc, ptrunc and qtrunc aliases")
 
 test_that("rtrunc works the same from generic and alias", {
   expect_identical(
@@ -58,7 +58,10 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, shape = 45, rate = 12, a = 1, b = 8, family = "gamma", faster = FALSE)
+      rtrunc(
+        1000, shape = 45, rate = 12, a = 1, b = 8, family = "gamma",
+        faster = FALSE
+      )
     },
     expected = {
       set.seed(8)
@@ -68,7 +71,10 @@ test_that("rtrunc works the same from generic and alias", {
   expect_identical(
     object = {
       set.seed(8)
-      rtrunc(1000, shape = 45, rate = 12, a = 0.2, b = 0.3, family = "invgamma", faster = FALSE)
+      rtrunc(
+        1000, shape = 45, rate = 12, a = 0.2, b = 0.3, family = "invgamma",
+        faster = FALSE
+      )
     },
     expected = {
       set.seed(8)
@@ -124,6 +130,142 @@ test_that("rtrunc works the same from generic and alias", {
       set.seed(8)
       rtruncpois(1000, 7521, 7500)
     },
+  )
+})
+
+test_that("ptrunc works the same from generic and alias", {
+  gen_args <- function(FUN, ...) {
+    pb <- sort(runif(3))
+    qt <- FUN(pb, ...)
+    list("a" = qt[1], "q" = qt[2], "b" = qt[3])
+  }
+  x <- gen_args(qbeta, shape1 = 1, shape2 = 2)
+  expect_identical(
+    ptrunc(x$q, 1, 2, x$a, x$b, family = "beta"),
+    ptruncbeta(x$q, 1, 2, x$a, x$b)
+  )
+  x <- gen_args(qbinom, size = 50, prob = 0.3)
+  expect_identical(
+    ptrunc(x$q, 50, .3, x$a, x$b, family = "binomial"),
+    ptruncbinom(x$q, 50, .3, x$a, x$b)
+  )
+  x <- gen_args(qchisq, df = 23)
+  expect_identical(
+    ptrunc(x$q, 23, x$a, x$b, family = "chisq"),
+    ptruncchisq(x$q, 23, x$a, x$b)
+  )
+  x <- gen_args(qcontbern, lambda = 0.5)
+  expect_identical(
+    ptrunc(x$q, 0.5, x$a, x$b, family = "contbern"),
+    ptrunccontbern(x$q, 0.5, x$a, x$b)
+  )
+  x <- gen_args(qexp, rate = 26)
+  expect_identical(
+    ptrunc(x$q, 26, x$a, x$b, family = "exp"),
+    ptruncexp(x$q, 26, x$a, x$b)
+  )
+  x <- gen_args(qgamma, shape = 4, rate = 5)
+  expect_identical(
+    ptrunc(x$q, 4, 5, a = x$a, b = x$b, family = "gamma"),
+    ptruncgamma(x$q, 4, 5, a = x$a, b = x$b)
+  )
+  x <- gen_args(qinvgamma, shape = 4, scale = 6)
+  expect_identical(
+    ptrunc(x$q, 4, 6, a = x$a, b = x$b, family = "invgamma"),
+    ptruncinvgamma(x$q, 4, 6, a = x$a, b = x$b)
+  )
+  x <- gen_args(qinvgauss, m = 1, s = 3)
+  expect_identical(
+    ptrunc(x$q, 1, 3, a = x$a, b = x$b, family = "invgauss"),
+    ptruncinvgauss(x$q, 1, 3, a = x$a, b = x$b)
+  )
+  x <- gen_args(qlnorm, meanlog = 7, sdlog = 2)
+  expect_identical(
+    ptrunc(x$q, 7, 2, a = x$a, b = x$b, family = "lognormal"),
+    ptrunclnorm(x$q, 7, 2, a = x$a, b = x$b)
+  )
+  x <- gen_args(qnbinom, size = 55, prob = .4)
+  expect_identical(
+    ptrunc(x$q, 55, .4, a = x$a, b = x$b, family = "nbinom"),
+    ptruncnbinom(x$q, 55, .4, a = x$a, b = x$b)
+  )
+  x <- gen_args(qnorm, mean = 1, sd = 3)
+  expect_identical(
+    ptrunc(x$q, mean = 1, sd = 3, a = x$a, b = x$b),
+    ptruncnorm(x$q, mean = 1, sd = 3, a = x$a, b = x$b)
+  )
+  x <- gen_args(qpois, lambda = 72)
+  expect_identical(
+    ptrunc(x$q, 72, a = x$a, b = x$b, family = "poisson"),
+    ptruncpois(x$q, 72, a = x$a, b = x$b)
+  )
+})
+
+test_that("qtrunc works the same from generic and alias", {
+  gen_args <- function(FUN, ...) {
+    pb <- sort(runif(3))
+    qt <- FUN(pb, ...)
+    list("a" = qt[1], "p" = pb[2], "b" = qt[3])
+  }
+  x <- gen_args(qbeta, shape1 = 1, shape2 = 2)
+  expect_identical(
+    qtrunc(x$p, 1, 2, x$a, x$b, family = "beta"),
+    qtruncbeta(x$p, 1, 2, x$a, x$b)
+  )
+  x <- gen_args(qbinom, size = 50, prob = 0.3)
+  expect_identical(
+    qtrunc(x$p, 50, .3, x$a, x$b, family = "binomial"),
+    qtruncbinom(x$p, 50, .3, x$a, x$b)
+  )
+  x <- gen_args(qchisq, df = 23)
+  expect_identical(
+    qtrunc(x$p, 23, x$a, x$b, family = "chisq"),
+    qtruncchisq(x$p, 23, x$a, x$b)
+  )
+  x <- gen_args(qcontbern, lambda = 0.5)
+  expect_identical(
+    qtrunc(x$p, 0.5, x$a, x$b, family = "contbern"),
+    qtrunccontbern(x$p, 0.5, x$a, x$b)
+  )
+  x <- gen_args(qexp, rate = 26)
+  expect_identical(
+    qtrunc(x$p, 26, x$a, x$b, family = "exp"),
+    qtruncexp(x$p, 26, x$a, x$b)
+  )
+  x <- gen_args(qgamma, shape = 4, rate = 5)
+  expect_identical(
+    qtrunc(x$p, 4, 5, a = x$a, b = x$b, family = "gamma"),
+    qtruncgamma(x$p, 4, 5, a = x$a, b = x$b)
+  )
+  x <- gen_args(qinvgamma, shape = 4, scale = 6)
+  expect_identical(
+    qtrunc(x$p, 4, 6, a = x$a, b = x$b, family = "invgamma"),
+    qtruncinvgamma(x$p, 4, 6, a = x$a, b = x$b)
+  )
+  x <- gen_args(qinvgauss, m = 1, s = 3)
+  expect_identical(
+    qtrunc(x$p, 1, 3, a = x$a, b = x$b, family = "invgauss"),
+    qtruncinvgauss(x$p, 1, 3, a = x$a, b = x$b)
+  )
+  x <- gen_args(qlnorm, meanlog = 7, sdlog = 2)
+  expect_identical(
+    qtrunc(x$p, 7, 2, a = x$a, b = x$b, family = "lognormal"),
+    qtrunclnorm(x$p, 7, 2, a = x$a, b = x$b)
+  )
+  x <- gen_args(qnbinom, size = 55, prob = .4)
+  expect_identical(
+    qtrunc(x$p, 55, .4, a = x$a, b = x$b, family = "nbinom"),
+    qtruncnbinom(x$p, 55, .4, a = x$a, b = x$b)
+  )
+  x <- gen_args(qnorm, mean = 1, sd = 3)
+  expect_identical(
+    qtrunc(x$p, mean = 1, sd = 3, a = x$a, b = x$b),
+    qtruncnorm(x$p, mean = 1, sd = 3, a = x$a, b = x$b)
+  )
+  x <- gen_args(qpois, lambda = 72)
+  expect_identical(
+    qtrunc(x$p, 72, a = x$a, b = x$b, family = "poisson"),
+    qtruncpois(x$p, 72, a = x$a, b = x$b)
   )
 })
 

@@ -5,7 +5,8 @@ sampleFromTruncated <- function(parms) {
   # Generating empty structure with correct class ------------------------------
   className <- class(parms$n)
   family <- gsub("trunc_", "", className)
-  y <- structure(numeric(0), class = className)
+  y <- numeric(0)
+  class(y) <- className
 
   # Checking domain and parmeters ----------------------------------------------
   validateDomain(y, parms)
@@ -14,10 +15,9 @@ sampleFromTruncated <- function(parms) {
     parms$rate <- NULL
   } else if (family == "nbinom") {
     if (parms$mu == "") {
+      # This also works when mu was passed instead of prob, because the latter
+      # has been calculated from the former in the rtrunc method.
       parms$mu <- NULL
-    } else if (parms$prob == "") {
-      parms$prob <- NULL
-      class(parms$n) <- "trunc_nbinom_mu"
     }
   }
   common_parms <- c("a", "b", "n")
@@ -71,5 +71,4 @@ sampleFromTruncated <- function(parms) {
   # Attaching attributes -------------------------------------------------------
   class(y) <- className
   y <- attachDistroAttributes(y, family, parms)
-  return(y)
 }

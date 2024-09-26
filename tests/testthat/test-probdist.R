@@ -158,7 +158,9 @@ test_that("Log-normal parameteres are properly converted", {
   prbdst_1 <- probdist(meanlog = mu, sdlog = sg, family = fam)
   expect_equal(prbdst_1$family, fam)
   expect_equal(prbdst_1$parms, c(meanlog = mu, sdlog = sg))
-  expect_equal(prbdst_1$nat_parms, c(eta1 = mu / sg ^ 2, eta2 = -1 / 2 / sg ^ 2))
+  expect_equal(
+    prbdst_1$nat_parms, c(eta1 = mu / sg ^ 2, eta2 = -1 / 2 / sg ^ 2)
+  )
 
   prbdst_nat <- probdist(eta1 = et1, eta2 = et2, family = fam)
   expect_equal(
@@ -177,7 +179,9 @@ test_that("Normal parameteres are properly converted", {
   prbdst_1 <- probdist(mean = mu, sd = sg, family = fam)
   expect_equal(prbdst_1$family, fam)
   expect_equal(prbdst_1$parms, c(mean = mu, sd = sg))
-  expect_equal(prbdst_1$nat_parms, c(eta1 = mu / sg ^ 2, eta2 = -1 / 2 / sg ^ 2))
+  expect_equal(
+    prbdst_1$nat_parms, c(eta1 = mu / sg ^ 2, eta2 = -1 / 2 / sg ^ 2)
+  )
 
   prbdst_nat <- probdist(eta1 = et1, eta2 = et2, family = fam)
   expect_equal(

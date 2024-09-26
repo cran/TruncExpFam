@@ -5,5 +5,5 @@ prepEta <- function(parms, trunc_class) {
   } else {
     names(eta) <- paste0("eta", seq_along(parms))
   }
-  return(eta)
+  eta
 }

@@ -59,14 +59,18 @@ probdist$methods(
 printParm <- function(parms, max_name_width = 7L, max_value_width = 10L) {
   for (p in names(parms)) {
     name_width <- nchar(p)
-    name_value <- paste(append(p, rep(" ", max_name_width - name_width)), collapse = "")
+    name_value <- paste(
+      append(p, rep(" ", max_name_width - name_width)), collapse = ""
+    )
     max_tot_width <- max_name_width + max_value_width
-    parm_value <- formatC(parms[[p]], width = max_tot_width - nchar(name_value), flag = "-")
+    parm_value <- formatC(
+      parms[[p]], width = max_tot_width - nchar(name_value), flag = "-"
+    )
     cat(name_value, "=", parm_value)
   }
 }
 
 titleCase <- function(txt) {
   txt <- strsplit(txt, "")[[1]]
-  return(paste(append(toupper(txt[[1]]), txt[-1]), collapse = ""))
+  paste(append(toupper(txt[[1]]), txt[-1]), collapse = "")
 }

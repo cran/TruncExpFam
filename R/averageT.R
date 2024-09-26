@@ -10,5 +10,4 @@ averageT <- function(y) {
   } else {
     out <- colMeans(Ty)
   }
-  return(out)
 }

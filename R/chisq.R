@@ -5,9 +5,16 @@
 #' @param df degrees of freedom for "parent" distribution
 #' @rdname rtrunc
 #' @export
-rtruncchisq <- rtrunc.chisq <- function(n, df, a = 0, b = Inf) {
+rtruncchisq <- rtrunc.chisq <- function(n, df, a = 0, b = Inf, faster = FALSE) {
   class(n) <- "trunc_chisq"
-  sampleFromTruncated(mget(ls()))
+  if (faster) {
+    family <- gsub("trunc_", "", class(n))
+    parms <- mget(ls())[grep("^faster$|^n$|^family$", ls(), invert = TRUE)]
+    return(rtrunc_direct(n, family, parms, a, b))
+  } else {
+    parms <- mget(ls())[grep("^faster$", ls(), invert = TRUE)]
+    return(sampleFromTruncated(parms))
+  }
 }
 
 #' @export
@@ -29,11 +36,12 @@ empiricalParameters.trunc_chisq <- function(y, ...) {
   # Returns empirical parameter estimate for df
   parms <- c("df" = mean(y))
   class(parms) <- "parms_chisq"
-  return(parms)
+  parms
 }
 
+#' @method sufficientT trunc_chisq
 sufficientT.trunc_chisq <- function(y) {
-  return(suff.T = log(y))
+  log(y)
 }
 
 #' @export
@@ -43,7 +51,7 @@ natural2parameters.parms_chisq <- function(eta, ...) {
   if (length(eta) != 1) stop("Eta must be one single number")
   df <- c(df = 2 * (eta[[1]] + 1))
   class(df) <- class(eta)
-  return(df)
+  df
 }
 
 #' @export
@@ -51,15 +59,16 @@ parameters2natural.parms_chisq <- function(parms, ...) {
   # parms: The parameter lambda in a Chi Square distribution
   # returns the natural parameters
   eta <- prepEta(parms / 2 - 1, class(parms))
-  return(eta)
 }
 
+#' @method getGradETinv parms_chisq
 getGradETinv.parms_chisq <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
-  return(A = 1 / sum(1 / (as.vector(eta) + (1:1e6))^2))
+  1 / sum(1 / (as.vector(eta) + (1:1e6))^2)
 }
 
+#' @method getYseq trunc_chisq
 getYseq.trunc_chisq <- function(y, y.min = 0, y.max, n = 100) {
   mean <- mean(y, na.rm = TRUE)
   var.y <- var(y, na.rm = TRUE)

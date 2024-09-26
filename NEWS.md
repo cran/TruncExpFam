@@ -1,3 +1,13 @@
+# TruncExpFam 1.2.0
+
+* Implemented `ptrunc()` and `qtrunc()` for all distributions (issue #54)
+* Refactoring (issue #104, #112)
+* Fixed bugs related to using the Negative Binomial with `mu` instead of `prob` (issue #107)
+* Fixed domain validation on Negative Binomial and Inverse Gamma
+* Added domain validation to `rtrunc(..., faster = TRUE)` (issue #109)
+* Added `faster` argument to `rtrunc()` aliases (issue #110)
+* Improved calculation of cumulative densities (issue #113)
+
 # TruncExpFam 1.1.1
 
 * Fixed `UseMethod()` no longer forwarding local variables from the generic on R-devel (issue #103)

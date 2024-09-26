@@ -47,12 +47,11 @@ validateFamilyParms <- function(family, parms) {
       "parameters or use a different family."
     )
   }
-  return(list(is_valid = all(unlist(matched)), family_name = family))
+  list(is_valid = all(unlist(matched)), family_name = family)
 }
 
 useStandardFamilyName <- function(family) {
   validateFamilyName(family)
   valid_names <- valid_fam_parm[[match(family, valid_distros)]]
   standard_name <- valid_names$family[1]
-  return(standard_name)
 }

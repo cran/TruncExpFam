@@ -7,24 +7,37 @@
 #' @param scale scale of "parent" distribution
 #' @rdname rtrunc
 #' @export
-rtruncgamma <- rtrunc.gamma <- function(n, shape, rate = 1, scale = 1 / rate,
-                                        a = 0, b = Inf) {
+rtruncgamma <- function(
+  n, shape, rate = 1, scale = 1 / rate, a = 0, b = Inf, faster = FALSE
+) {
   if (!missing(rate) && !missing(scale)) {
     stop("specify 'rate' or 'scale' but not both")
   }
   class(n) <- "trunc_gamma"
-  sampleFromTruncated(mget(ls()))
+  if (faster) {
+    parms <- mget(ls())[grep("^faster$|^n$|^rate$", ls(), invert = TRUE)]
+    family <- gsub("trunc_", "", class(n))
+    return(rtrunc_direct(n, family, parms, a, b))
+  } else {
+    parms <- mget(ls())[grep("^faster$", ls(), invert = TRUE)]
+    return(sampleFromTruncated(parms))
+  }
 }
+rtrunc.gamma <- rtruncgamma
 
 #' @export
 dtrunc.trunc_gamma <- function(
   y, shape, rate = 1, scale = 1 / rate, eta, a = 0, b = Inf, ...
 ) {
   if (missing(eta)) {
-    eta <- parameters2natural.parms_gamma(c("shape" = shape, "rate" = rate, "scale" = scale))
+    eta <- parameters2natural.parms_gamma(
+      c("shape" = shape, "rate" = rate, "scale" = scale)
+    )
   }
   parm <- natural2parameters.parms_gamma(eta)
-  dens <- rescaledDensities(y, a, b, dgamma, pgamma, parm["shape"], parm["rate"])
+  dens <- rescaledDensities(
+    y, a, b, dgamma, pgamma, parm["shape"], parm["rate"]
+  )
   return(dens)
 }
 
@@ -40,11 +53,12 @@ empiricalParameters.trunc_gamma <- function(y, ...) {
   shp <- amean^2 / avar
   parms <- c(shape = shp, rate = shp / amean)
   class(parms) <- "parms_gamma"
-  return(parms)
+  parms
 }
 
+#' @method sufficientT trunc_gamma
 sufficientT.trunc_gamma <- function(y) {
-  return(suff.T = cbind(log(y), y))
+  suff.T <- cbind(log(y), y)
 }
 
 #' @export
@@ -54,7 +68,7 @@ natural2parameters.parms_gamma <- function(eta, ...) {
   if (length(eta) != 2) stop("Eta must be a vector of two elements")
   parms <- c("shape" = eta[[1]] + 1, "rate" = -eta[[2]])
   class(parms) <- class(eta)
-  return(parms)
+  parms
 }
 
 #' @export
@@ -67,9 +81,10 @@ parameters2natural.parms_gamma <- function(parms, ...) {
     eta <- c(eta1 = parms[["shape"]] - 1, eta2 = -1 / parms[["scale"]])
   }
   class(eta) <- class(parms)
-  return(eta)
+  eta
 }
 
+#' @method getYseq trunc_gamma
 getYseq.trunc_gamma <- function(y, y.min = 1e-6, y.max, n = 100) {
   # Bør chekkes
   mean <- mean(y, na.rm = TRUE)
@@ -82,6 +97,7 @@ getYseq.trunc_gamma <- function(y, y.min = 1e-6, y.max, n = 100) {
   return(out)
 }
 
+#' @method getGradETinv parms_gamma
 getGradETinv.parms_gamma <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta' : p x p matrix
@@ -96,5 +112,5 @@ getGradETinv.parms_gamma <- function(eta, ...) {
     ),
     ncol = 2
   )
-  return(A = solve(A_inv))
+  A <- solve(A_inv)
 }

@@ -5,7 +5,7 @@ test_that("Wrong combinations trigger errors", {
   expect_error(parameters2natural(c(mean = 1, var = 3)), "set does not match")
   expect_error(parameters2natural(c(mean = 1, sd = 3), "beta"), "parameter set")
   expect_error(natural2parameters(c(mean = 1, eta = 3)), "start with \"eta\"")
-  expect_error(natural2parameters(c(1)), "must be a vector of two elements")
+  expect_error(natural2parameters(1), "must be a vector of two elements")
 })
 
 # Sampling values ==============================================================
@@ -55,7 +55,9 @@ test_that("Converting to natural", {
 
 test_that("Converting from natural", {
   expect_equivalent(unclass(natural2parameters(eta_beta, "beta")), parm_beta)
-  expect_equivalent(unclass(natural2parameters(eta_bin, "binomial")), parm_bin[2])
+  expect_equivalent(
+    unclass(natural2parameters(eta_bin, "binomial")), parm_bin[2]
+  )
   expect_equivalent(unclass(natural2parameters(eta_ch, "chisq")), parm_ch)
   expect_equivalent(unclass(natural2parameters(eta_cbn, "contbern")), parm_cbn)
   expect_equivalent(unclass(natural2parameters(eta_exp, "exp")), parm_exp)

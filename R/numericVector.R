@@ -1,6 +1,6 @@
 #' @title Extract parameters
 #' @param y Numeric vector containing observations from a random variable
-#' @param family Distribution family to assume for \code{y}
+#' @param family Distribution family to assume for `y`
 #' @param natural Should output be in terms of the natural parameter eta?
 #' @param ... arguments passed to [empiricalParameters()]
 #' @export
@@ -19,7 +19,9 @@
 #' empiricalParameters(x, family = "binomial", nsize = max(x))
 #' empiricalParameters(x, family = "poisson", natural = FALSE)
 #' empiricalParameters(x, family = "poisson", natural = TRUE)
-empiricalParameters.numeric <- function(y, family = "gaussian", natural = FALSE, ...) {
+empiricalParameters.numeric <- function(
+  y, family = "gaussian", natural = FALSE, ...
+) {
 
   # Assigning trunc family, if necessary
   class(y) <- paste0("trunc_", useStandardFamilyName(family))
