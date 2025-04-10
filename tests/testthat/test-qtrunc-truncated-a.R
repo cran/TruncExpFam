@@ -79,7 +79,7 @@ test_that("qtrunc() works as expected (chisq)", {
         q_stats <- qchisq(pt, df, lower.tail = lt, log.p = lg)
         expect_length(q_trunc, i)
         for (ii in seq_along(pt)) {
-          expect_gte(q_trunc[ii], q_stats[ii])
+          expect_gte(q_trunc[ii] + 1e-9, q_stats[ii])
           # Working back to p from q
           ptr <- ptrunc(
             q_trunc[ii], fam, df, lower.tail = lt, log.p = lg, a = a

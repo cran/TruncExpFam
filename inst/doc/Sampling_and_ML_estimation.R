@@ -5,7 +5,7 @@ knitr::opts_chunk$set(
 )
 
 ## ----install, eval=FALSE------------------------------------------------------
-#  install.packages("TruncExpFam")
+# install.packages("TruncExpFam")
 
 ## ----setup--------------------------------------------------------------------
 library(TruncExpFam)

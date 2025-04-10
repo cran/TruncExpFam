@@ -1,6 +1,6 @@
-397baef9a5f3e8a5e114000f3e3b1f10 *DESCRIPTION
+682b20b0c924296e8ddc83514595f12f *DESCRIPTION
 82913ae9ad0c6103d780997574912e11 *NAMESPACE
-8586c386d652c56eede9eafdb8160e32 *NEWS.md
+6ee2d222e837a579ec9ebff18ad7fed0 *NEWS.md
 86e09a5e39f83baf202264c19f0c357e *R/TruncExpFam-package.R
 04fc4159472cbb44cab6b163bbff806e *R/attachDistroAttributes.R
 a4fc7806c91cd229e3bf2f9c84f5c536 *R/averageT.R
@@ -36,11 +36,11 @@ feacb523de4f0bdb77ac0e6f501567bf *R/sampleFromUntruncated.R
 fc4efa6ee824fc6074c355958a6f4b6a *R/validateFamily.R
 6624abfba5d8097796d1029cca5bfded *R/validateNaturalParms.R
 58e1b2b82f33c1ac20097c6e536c83c5 *R/validateSupport.R
-0938452d89d4ba8b713459691396e1a8 *build/vignette.rds
+c35faed0ee96eead316500c315009fec *build/vignette.rds
 0fb4d625a7f78d0a4cf9e8444ff64be6 *inst/WORDLIST
-12029884e1af029391a149887f15c468 *inst/doc/Sampling_and_ML_estimation.R
+f6605b021ad18a3495e65f6f2649dc66 *inst/doc/Sampling_and_ML_estimation.R
 ca714e82bc1d64e70a79d8f27398fee6 *inst/doc/Sampling_and_ML_estimation.Rmd
-d1ab95e6e2036baa030c166b33e927c8 *inst/doc/Sampling_and_ML_estimation.html
+a6e5c2f8a39ecef6f471548c8188055e *inst/doc/Sampling_and_ML_estimation.html
 6790dba3a5adbef1f47f9fcd7d847a29 *man/TruncExpFam.Rd
 a15f895634ba7ab8f43d08409b4c6619 *man/averageT.Rd
 667582b2bdef289ae85fad1d1f650df1 *man/dot-onAttach.Rd
@@ -72,7 +72,7 @@ aa46cd4e90f4ef946f5e340b96fc62f9 *tests/testthat/test-printing.R
 35457e83a10b6f70f0861423aba70b3e *tests/testthat/test-ptrunc-truncated-ab.R
 197e3fdb98d0b1307a8418c7ec1c70aa *tests/testthat/test-ptrunc-truncated-b.R
 891c4e02c88331abe9f72f91a866db01 *tests/testthat/test-ptrunc-untruncated.R
-2101eaa8dea41560f40ca7a4cc40d285 *tests/testthat/test-qtrunc-truncated-a.R
+5fe51cac271a7f04ee00d5be06d7fb68 *tests/testthat/test-qtrunc-truncated-a.R
 2e91c93c7f5744cc00d0ca193a3098c9 *tests/testthat/test-qtrunc-truncated-ab.R
 51c91843694e968787946af287c67868 *tests/testthat/test-qtrunc-truncated-b.R
 5a023337cc01aa851cbc1c1beab5cb04 *tests/testthat/test-qtrunc-untruncated.R

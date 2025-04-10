@@ -1,3 +1,7 @@
+# TruncExpFam 1.2.1
+
+* Increased tolerance on unit test (issue #114)
+
 # TruncExpFam 1.2.0
 
 * Implemented `ptrunc()` and `qtrunc()` for all distributions (issue #54)

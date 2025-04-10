@@ -1,7 +1,7 @@
 Package: TruncExpFam
 Title: Truncated Exponential Family
-Version: 1.2.0
-Date: 2024-09-26
+Version: 1.2.1
+Date: 2025-04-10
 Authors@R: 
 	c(
 		person(
@@ -32,10 +32,11 @@ Suggests: knitr, rmarkdown, testthat
 URL: https://ocbe-uio.github.io/TruncExpFam/
 BugReports: https://github.com/ocbe-uio/TruncExpFam/issues
 VignetteBuilder: knitr
+Language: en-US
 NeedsCompilation: no
-Packaged: 2024-09-26 06:14:20 UTC; waldir
+Packaged: 2025-04-10 14:30:50 UTC; waldir
 Author: René Holst [aut],
   Waldir Leoncio [cre, aut]
 Maintainer: Waldir Leoncio <w.l.netto@medisin.uio.no>
 Repository: CRAN
-Date/Publication: 2024-09-26 06:30:02 UTC
+Date/Publication: 2025-04-10 15:00:02 UTC
