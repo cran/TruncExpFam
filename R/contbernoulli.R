@@ -94,7 +94,7 @@ empiricalParameters.trunc_contbern <- function(y, ...) {
   parms
 }
 
-#' @method sufficientT trunc_contbern
+#' @exportS3Method sufficientT trunc_contbern
 sufficientT.trunc_contbern <- function(y) {
   suff.T <- y
 }
@@ -116,7 +116,7 @@ parameters2natural.parms_contbern <- function(parms, ...) {
   eta <- prepEta(log(parms / (1 - parms)), class(parms))
 }
 
-#' @method getYseq trunc_contbern
+#' @exportS3Method getYseq trunc_contbern
 getYseq.trunc_contbern <- function(y, y.min = 0, y.max, n = 100) {
   mean <- mean(y, na.rm = TRUE)
   var.y <- var(y, na.rm = TRUE)
@@ -127,7 +127,7 @@ getYseq.trunc_contbern <- function(y, y.min = 0, y.max, n = 100) {
   return(out)
 }
 
-#' @method getGradETinv parms_contbern
+#' @exportS3Method getGradETinv parms_contbern
 getGradETinv.parms_contbern <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta

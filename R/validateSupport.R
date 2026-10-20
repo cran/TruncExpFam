@@ -2,20 +2,20 @@ validateSupport <- function(n, ...) {
   UseMethod("validateSupport")
 }
 
-#' @method validateSupport trunc_beta
+#' @exportS3Method validateSupport trunc_beta
 validateSupport.trunc_beta <- function(n, parms, ...) {
   support <- createSupport(n, "[]")
   judgeSupportLimits(n, parms, support)
 }
 
-#' @method validateSupport trunc_binomial
+#' @exportS3Method validateSupport trunc_binomial
 validateSupport.trunc_binomial <- function(n, parms, nsize = parms$size, ...) {
   support <- createSupport(n, "{}")
   support[["u"]] <- nsize
   judgeSupportLimits(n, parms, support, FALSE)
 }
 
-#' @method validateSupport trunc_chisq
+#' @exportS3Method validateSupport trunc_chisq
 validateSupport.trunc_chisq <- function(n, parms, ...) {
   if (is.null(parms) || parms$df > 1) {
     support <- createSupport(n, "[)")
@@ -25,55 +25,55 @@ validateSupport.trunc_chisq <- function(n, parms, ...) {
   judgeSupportLimits(n, parms, support)
 }
 
-#' @method validateSupport trunc_contbern
+#' @exportS3Method validateSupport trunc_contbern
 validateSupport.trunc_contbern <- function(n, parms, ...) {
   support <- createSupport(n, "[]")
   judgeSupportLimits(n, parms, support)
 }
 
-#' @method validateSupport trunc_exp
+#' @exportS3Method validateSupport trunc_exp
 validateSupport.trunc_exp <- function(n, parms, ...) {
   support <- createSupport(n, "[)")
   judgeSupportLimits(n, parms, support)
 }
 
-#' @method validateSupport trunc_gamma
+#' @exportS3Method validateSupport trunc_gamma
 validateSupport.trunc_gamma <- function(n, parms, ...) {
   support <- createSupport(n, "()")
   judgeSupportLimits(n, parms, support)
 }
 
-#' @method validateSupport trunc_invgamma
+#' @exportS3Method validateSupport trunc_invgamma
 validateSupport.trunc_invgamma <- function(n, parms, ...) {
   support <- createSupport(n, "()")
   judgeSupportLimits(n, parms, support)
 }
 
-#' @method validateSupport trunc_invgauss
+#' @exportS3Method validateSupport trunc_invgauss
 validateSupport.trunc_invgauss <- function(n, parms, ...) {
   support <- createSupport(n, "()")
   judgeSupportLimits(n, parms, support)
 }
 
-#' @method validateSupport trunc_lognormal
+#' @exportS3Method validateSupport trunc_lognormal
 validateSupport.trunc_lognormal <- function(n, parms, ...) {
   support <- createSupport(n, "()")
   judgeSupportLimits(n, parms, support)
 }
 
-#' @method validateSupport trunc_nbinom
+#' @exportS3Method validateSupport trunc_nbinom
 validateSupport.trunc_nbinom <- function(n, parms, ...) {
   support <- createSupport(n, "{}")
   judgeSupportLimits(n, parms, support, FALSE)
 }
 
-#' @method validateSupport trunc_normal
+#' @exportS3Method validateSupport trunc_normal
 validateSupport.trunc_normal <- function(n, parms, ...) {
   support <- createSupport(n, "()")
   judgeSupportLimits(n, parms, support, no_complex = TRUE)
 }
 
-#' @method validateSupport trunc_poisson
+#' @exportS3Method validateSupport trunc_poisson
 validateSupport.trunc_poisson <- function(n, parms, ...) {
   support <- createSupport(n, "{}")
   judgeSupportLimits(n, parms, support, FALSE)

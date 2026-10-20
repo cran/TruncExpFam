@@ -52,7 +52,7 @@ empiricalParameters.trunc_binomial <- function(y, size, ...) {
   parms
 }
 
-#' @method sufficientT trunc_binomial
+#' @exportS3Method sufficientT trunc_binomial
 sufficientT.trunc_binomial <- function(y) {
   suff.T <- y
 }
@@ -77,7 +77,7 @@ parameters2natural.parms_binomial <- function(parms, ...) {
   eta
 }
 
-#' @method getGradETinv parms_binomial
+#' @exportS3Method getGradETinv parms_binomial
 getGradETinv.parms_binomial <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
@@ -86,7 +86,7 @@ getGradETinv.parms_binomial <- function(eta, ...) {
   ((1 + exp.eta)^2 / exp.eta) / nsize
 }
 
-#' @method getYseq trunc_binomial
+#' @exportS3Method getYseq trunc_binomial
 getYseq.trunc_binomial <- function(y, y.min = 0, y.max, n = 100) {
   nsize <- attr(y, "parameters")$size
   y.lo <- round(y.min)

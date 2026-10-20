@@ -59,6 +59,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Waldir Leoncio \email{w.l.netto@medisin.uio.no}
   \item René Holst \email{rene.holst@medisin.uio.no}
 }
 

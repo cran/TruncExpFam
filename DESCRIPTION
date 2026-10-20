@@ -1,7 +1,7 @@
 Package: TruncExpFam
 Title: Truncated Exponential Family
-Version: 1.2.1
-Date: 2025-04-10
+Version: 1.2.2
+Date: 2026-10-20
 Authors@R: 
 	c(
 		person(
@@ -26,17 +26,17 @@ Description: Handles truncated members from the exponential family of
 	estimation.
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.3.2
 Imports: methods, invgamma, rmutil
 Suggests: knitr, rmarkdown, testthat
 URL: https://ocbe-uio.github.io/TruncExpFam/
 BugReports: https://github.com/ocbe-uio/TruncExpFam/issues
 VignetteBuilder: knitr
 Language: en-US
+Config/roxygen2/version: 8.1.1
 NeedsCompilation: no
-Packaged: 2025-04-10 14:30:50 UTC; waldir
+Packaged: 2026-10-20 08:59:57 UTC; waldir
 Author: René Holst [aut],
   Waldir Leoncio [cre, aut]
 Maintainer: Waldir Leoncio <w.l.netto@medisin.uio.no>
 Repository: CRAN
-Date/Publication: 2025-04-10 15:00:02 UTC
+Date/Publication: 2026-10-20 09:20:02 UTC

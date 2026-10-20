@@ -25,6 +25,30 @@ S3method(empiricalParameters,trunc_lognormal)
 S3method(empiricalParameters,trunc_nbinom)
 S3method(empiricalParameters,trunc_normal)
 S3method(empiricalParameters,trunc_poisson)
+S3method(getGradETinv,parms_beta)
+S3method(getGradETinv,parms_binomial)
+S3method(getGradETinv,parms_chisq)
+S3method(getGradETinv,parms_contbern)
+S3method(getGradETinv,parms_exp)
+S3method(getGradETinv,parms_gamma)
+S3method(getGradETinv,parms_invgamma)
+S3method(getGradETinv,parms_invgauss)
+S3method(getGradETinv,parms_lognormal)
+S3method(getGradETinv,parms_nbinom)
+S3method(getGradETinv,parms_normal)
+S3method(getGradETinv,parms_poisson)
+S3method(getYseq,trunc_beta)
+S3method(getYseq,trunc_binomial)
+S3method(getYseq,trunc_chisq)
+S3method(getYseq,trunc_contbern)
+S3method(getYseq,trunc_exp)
+S3method(getYseq,trunc_gamma)
+S3method(getYseq,trunc_invgamma)
+S3method(getYseq,trunc_invgauss)
+S3method(getYseq,trunc_lognormal)
+S3method(getYseq,trunc_nbinom)
+S3method(getYseq,trunc_normal)
+S3method(getYseq,trunc_poisson)
 S3method(natural2parameters,numeric)
 S3method(natural2parameters,parms_beta)
 S3method(natural2parameters,parms_binomial)
@@ -76,6 +100,42 @@ S3method(rtrunc_direct,lognormal)
 S3method(rtrunc_direct,nbinom)
 S3method(rtrunc_direct,normal)
 S3method(rtrunc_direct,poisson)
+S3method(sufficientT,trunc_beta)
+S3method(sufficientT,trunc_binomial)
+S3method(sufficientT,trunc_chisq)
+S3method(sufficientT,trunc_contbern)
+S3method(sufficientT,trunc_exp)
+S3method(sufficientT,trunc_gamma)
+S3method(sufficientT,trunc_invgamma)
+S3method(sufficientT,trunc_invgauss)
+S3method(sufficientT,trunc_lognormal)
+S3method(sufficientT,trunc_nbinom)
+S3method(sufficientT,trunc_normal)
+S3method(sufficientT,trunc_poisson)
+S3method(validateDomain,trunc_beta)
+S3method(validateDomain,trunc_binomial)
+S3method(validateDomain,trunc_chisq)
+S3method(validateDomain,trunc_contbern)
+S3method(validateDomain,trunc_exp)
+S3method(validateDomain,trunc_gamma)
+S3method(validateDomain,trunc_invgamma)
+S3method(validateDomain,trunc_invgauss)
+S3method(validateDomain,trunc_lognormal)
+S3method(validateDomain,trunc_nbinom)
+S3method(validateDomain,trunc_normal)
+S3method(validateDomain,trunc_poisson)
+S3method(validateSupport,trunc_beta)
+S3method(validateSupport,trunc_binomial)
+S3method(validateSupport,trunc_chisq)
+S3method(validateSupport,trunc_contbern)
+S3method(validateSupport,trunc_exp)
+S3method(validateSupport,trunc_gamma)
+S3method(validateSupport,trunc_invgamma)
+S3method(validateSupport,trunc_invgauss)
+S3method(validateSupport,trunc_lognormal)
+S3method(validateSupport,trunc_nbinom)
+S3method(validateSupport,trunc_normal)
+S3method(validateSupport,trunc_poisson)
 export(dtrunc)
 export(dtruncbeta)
 export(dtruncbinom)
@@ -134,51 +194,59 @@ export(rtrunclnorm)
 export(rtruncnbinom)
 export(rtruncnorm)
 export(rtruncpois)
-importFrom(invgamma,dinvgamma)
-importFrom(invgamma,pinvgamma)
-importFrom(invgamma,qinvgamma)
-importFrom(invgamma,rinvgamma)
-importFrom(methods,is)
-importFrom(methods,new)
-importFrom(rmutil,dinvgauss)
-importFrom(rmutil,pinvgauss)
-importFrom(rmutil,qinvgauss)
-importFrom(rmutil,rinvgauss)
-importFrom(stats,dbeta)
-importFrom(stats,dbinom)
-importFrom(stats,dchisq)
-importFrom(stats,dexp)
-importFrom(stats,dgamma)
-importFrom(stats,dlnorm)
-importFrom(stats,dnbinom)
-importFrom(stats,dnorm)
-importFrom(stats,dpois)
-importFrom(stats,pbeta)
-importFrom(stats,pbinom)
-importFrom(stats,pchisq)
-importFrom(stats,pexp)
-importFrom(stats,pgamma)
-importFrom(stats,plnorm)
-importFrom(stats,pnbinom)
-importFrom(stats,pnorm)
-importFrom(stats,ppois)
-importFrom(stats,qbeta)
-importFrom(stats,qbinom)
-importFrom(stats,qchisq)
-importFrom(stats,qexp)
-importFrom(stats,qgamma)
-importFrom(stats,qlnorm)
-importFrom(stats,qnbinom)
-importFrom(stats,qnorm)
-importFrom(stats,qpois)
-importFrom(stats,rbeta)
-importFrom(stats,rbinom)
-importFrom(stats,rchisq)
-importFrom(stats,rexp)
-importFrom(stats,rgamma)
-importFrom(stats,rlnorm)
-importFrom(stats,rnbinom)
-importFrom(stats,rnorm)
-importFrom(stats,rpois)
-importFrom(stats,runif)
-importFrom(stats,var)
+importFrom(invgamma,
+  dinvgamma,
+  pinvgamma,
+  qinvgamma,
+  rinvgamma
+)
+importFrom(methods,
+  is,
+  new
+)
+importFrom(rmutil,
+  dinvgauss,
+  pinvgauss,
+  qinvgauss,
+  rinvgauss
+)
+importFrom(stats,
+  dbeta,
+  dbinom,
+  dchisq,
+  dexp,
+  dgamma,
+  dlnorm,
+  dnbinom,
+  dnorm,
+  dpois,
+  pbeta,
+  pbinom,
+  pchisq,
+  pexp,
+  pgamma,
+  plnorm,
+  pnbinom,
+  pnorm,
+  ppois,
+  qbeta,
+  qbinom,
+  qchisq,
+  qexp,
+  qgamma,
+  qlnorm,
+  qnbinom,
+  qnorm,
+  qpois,
+  rbeta,
+  rbinom,
+  rchisq,
+  rexp,
+  rgamma,
+  rlnorm,
+  rnbinom,
+  rnorm,
+  rpois,
+  runif,
+  var
+)

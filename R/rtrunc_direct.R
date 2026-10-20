@@ -26,7 +26,7 @@ rtrunc_direct.normal <- function(n, family, parms, a = -Inf, b = Inf, ...) {
     family = family,
     parms = parms
   )
-  return(q_T)
+  q_T
 }
 
 #' @export
@@ -39,7 +39,7 @@ rtrunc_direct.beta <- function(n, family, parms, a = 0, b = 1, ...) {
     family = family,
     parms = parms
   )
-  return(q_T)
+  q_T
 }
 
 #' @export
@@ -52,7 +52,7 @@ rtrunc_direct.chisq <- function(n, family, parms, a = 0, b = Inf, ...) {
     family = family,
     parms = parms
   )
-  return(q_T)
+  q_T
 }
 
 #' @export
@@ -65,7 +65,7 @@ rtrunc_direct.contbern <- function(n, family, parms, a = 0, b = 1, ...) {
     family = family,
     parms = parms
   )
-  return(q_T)
+  q_T
 }
 
 #' @export
@@ -78,43 +78,43 @@ rtrunc_direct.exp <- function(n, family, parms, a = 0, b = Inf, ...) {
     family = family,
     parms = parms
   )
-  return(q_T)
+  q_T
 }
 
 #' @export
 rtrunc_direct.gamma <- function(n, family, parms, a = 0, b = Inf, ...) {
-  F_a <- cumDens(a, pgamma, family, parms[["shape"]], parms[["rate"]])
-  F_b <- cumDens(b, pgamma, family, parms[["shape"]], parms[["rate"]])
   parms <- c(parms, "n" = n, "a" = a, "b" = b)
   if (is.null(parms[["scale"]])) {
     parms[["scale"]] <- 1 / parms[["rate"]]
   } else if (is.null(parms[["rate"]])) {
     parms[["rate"]] <- 1 / parms[["scale"]]
   }
+  F_a <- cumDens(a, pgamma, family, parms[["shape"]], parms[["rate"]])
+  F_b <- cumDens(b, pgamma, family, parms[["shape"]], parms[["rate"]])
   q_T <- truncated_q(
     q_T = qgamma(rescaled_q(n, F_a, F_b), parms[["shape"]], parms[["rate"]]),
     family = family,
     parms = parms
   )
-  return(q_T)
+  q_T
 }
 
 #' @export
 rtrunc_direct.invgamma <- function(n, family, parms, a = 0, b = Inf, ...) {
-  F_a <- cumDens(a, pinvgamma, family, parms[["shape"]], parms[["rate"]])
-  F_b <- cumDens(b, pinvgamma, family, parms[["shape"]], parms[["rate"]])
   parms <- c(parms, "n" = n, "a" = a, "b" = b)
   if (is.null(parms[["scale"]])) {
     parms[["scale"]] <- 1 / parms[["rate"]]
   } else if (is.null(parms[["rate"]])) {
     parms[["rate"]] <- 1 / parms[["scale"]]
   }
+  F_a <- cumDens(a, pinvgamma, family, parms[["shape"]], parms[["rate"]])
+  F_b <- cumDens(b, pinvgamma, family, parms[["shape"]], parms[["rate"]])
   q_T <- truncated_q(
     q_T = qinvgamma(rescaled_q(n, F_a, F_b), parms[["shape"]], parms[["rate"]]),
     family = family,
     parms = parms
   )
-  return(q_T)
+  q_T
 }
 
 #' @export
@@ -127,7 +127,7 @@ rtrunc_direct.invgauss <- function(n, family, parms, a = 0, b = Inf, ...) {
     family = family,
     parms = parms
   )
-  return(q_T)
+  q_T
 }
 
 #' @export
@@ -140,7 +140,7 @@ rtrunc_direct.lognormal <- function(n, family, parms, a = 0, b = Inf, ...) {
     family = family,
     parms = parms
   )
-  return(q_T)
+  q_T
 }
 
 #' @export
@@ -157,7 +157,7 @@ rtrunc_direct.poisson <- function(n, family, parms, a = 0, b = Inf, ...) {
   weights <- dpois(a:practical_b, parms[["lambda"]]) / (F_b - F_a)
   trunc_samp <- sample(a:practical_b, size = n, replace = TRUE, prob = weights)
   f_T <- truncated_q(trunc_samp, family, parms)  # just to add the attributes
-  return(f_T)
+  f_T
 }
 
 #' @export
@@ -170,7 +170,7 @@ rtrunc_direct.binomial <- function(
   weights <- dbinom(a:b, parms[["size"]], parms[["prob"]]) / (F_b - F_a)
   trunc_samp <- sample(a:b, size = n, replace = TRUE, prob = weights)
   f_T <- truncated_q(trunc_samp, family, parms)  # just to add the attributes
-  return(f_T)
+  f_T
 }
 
 #' @export
@@ -196,7 +196,7 @@ rtrunc_direct.nbinom <- function(n, family, parms, a = 0, b = Inf, ...) {
   trunc_samp <- sample(a:practical_b, size = n, replace = TRUE, prob = weights)
   parms <- c(parms, "n" = n, "a" = a, "b" = b)
   f_T <- truncated_q(trunc_samp, family, parms)  # just to add the attributes
-  return(f_T)
+  f_T
 }
 
 cumDens <- function(x, probFunction, family, ...) {

@@ -56,7 +56,7 @@ empiricalParameters.trunc_gamma <- function(y, ...) {
   parms
 }
 
-#' @method sufficientT trunc_gamma
+#' @exportS3Method sufficientT trunc_gamma
 sufficientT.trunc_gamma <- function(y) {
   suff.T <- cbind(log(y), y)
 }
@@ -84,7 +84,7 @@ parameters2natural.parms_gamma <- function(parms, ...) {
   eta
 }
 
-#' @method getYseq trunc_gamma
+#' @exportS3Method getYseq trunc_gamma
 getYseq.trunc_gamma <- function(y, y.min = 1e-6, y.max, n = 100) {
   # Bør chekkes
   mean <- mean(y, na.rm = TRUE)
@@ -97,7 +97,7 @@ getYseq.trunc_gamma <- function(y, y.min = 1e-6, y.max, n = 100) {
   return(out)
 }
 
-#' @method getGradETinv parms_gamma
+#' @exportS3Method getGradETinv parms_gamma
 getGradETinv.parms_gamma <- function(eta, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta' : p x p matrix

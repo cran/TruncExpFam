@@ -355,12 +355,12 @@ test_that("Tight truncation limits is not a speed limiter", {
   # Contbern
   expect_error({
       setTimeLimit(time_limit)
-      rtrunc(n, family = "contbern", lambda = .8, a = .1, b = .2)
+      rtrunc(n, family = "contbern", lambda = .8, a = .1, b = .15)
     },
     "reached CPU time limit"
   )
   expect_length(
-    rtrunc(n, family = "contbern", lambda = .8, a = .1, b = .2, faster = TRUE),
+    rtrunc(n, family = "contbern", lambda = .8, a = .1, b = .15, faster = TRUE),
     n
   )
 
@@ -475,36 +475,43 @@ test_that("Truncation limits are respected for faster = TRUE", {
   smp <- rtrunc(
     sz, "beta", shape1 = 4, shape2 = 5, faster = TRUE, a = .5, b = .7
   )
+  expect_length(smp, sz)
   expect_gte(min(smp), .5)
   expect_lte(max(smp), .7)
 
   smp <- rtrunc(
     sz, "binomial", size = 93, prob = .39, faster = TRUE, a = 33, b = 40
   )
+  expect_length(smp, sz)
   expect_gte(min(smp), 33)
   expect_lte(max(smp), 40)
 
   smp <- rtrunc(sz, "chisq", df = 61, a = 50, b = 70, faster = TRUE)
+  expect_length(smp, sz)
   expect_gte(min(smp), 50)
   expect_lte(max(smp), 70)
 
   smp <- rtrunc(sz, "contbern", lambda = .44, faster = TRUE, a = .5, b = .8)
+  expect_length(smp, sz)
   expect_gte(min(smp), .5)
   expect_lte(max(smp), .8)
 
   smp <- rtrunc(sz, "exp", rate = 4, faster = TRUE, a = .1, b = .2)
+  expect_length(smp, sz)
   expect_gte(min(smp), .1)
   expect_lte(max(smp), .2)
 
   smp <- rtrunc(
     sz, "gamma", shape = 18, rate = 70, faster = TRUE, a = .2, b = .5
   )
+  expect_length(smp, sz)
   expect_gte(min(smp), .2)
   expect_lte(max(smp), .5)
 
   smp <- rtrunc(
     sz, "invgamma", shape = 1, rate = 7, faster = TRUE, a = 10, b = 20
   )
+  expect_length(smp, sz)
   expect_gte(min(smp), 10)
   expect_lte(max(smp), 20)
 
@@ -515,20 +522,39 @@ test_that("Truncation limits are respected for faster = TRUE", {
   smp <- rtrunc(
     sz, "lognormal", meanlog = 23, sdlog = 6, faster = TRUE, a = 10, b = 100
   )
+  expect_length(smp, sz)
   expect_gte(min(smp), 10)
   expect_lte(max(smp), 100)
 
   smp <- rtrunc(
     sz, "nbinom", size = 54, mu = 33, faster = TRUE, a = 60, b = 80
   )
+  expect_length(smp, sz)
   expect_gte(min(smp), 60)
   expect_lte(max(smp), 80)
 
   smp <- rtrunc(sz, "normal", mean = 23, sd = 6, faster = TRUE, a = 30, b = 40)
+  expect_length(smp, sz)
   expect_gte(min(smp), 30)
   expect_lte(max(smp), 40)
 
   smp <- rtrunc(sz, "poisson", lambda = 886, faster = TRUE, a = 900, b = 910)
+  expect_length(smp, sz)
   expect_gte(min(smp), 900)
   expect_lte(max(smp), 910)
+})
+
+test_that("Gamma wrappers work with faster = TRUE", {
+  sz <- 1e3L
+  smps <- list(
+    rtruncgamma(sz, shape = 3, rate = 3, a = .8, b = 1.2, faster = TRUE),
+    rtruncgamma(sz, shape = 3, scale = 1 / 3, a = .8, b = 1.2, faster = TRUE),
+    rtruncinvgamma(sz, shape = 3, rate = 3, a = .8, b = 1.2, faster = TRUE),
+    rtruncinvgamma(sz, shape = 3, scale = 1 / 3, a = .8, b = 1.2, faster = TRUE)
+  )
+  for (smp in smps) {
+    expect_length(smp, sz)
+    expect_gte(min(smp), .8)
+    expect_lte(max(smp), 1.2)
+  }
 })

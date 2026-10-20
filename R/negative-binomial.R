@@ -62,7 +62,7 @@ empiricalParameters.trunc_nbinom <- function(y, r, k, ...) {
   parms
 }
 
-#' @method sufficientT trunc_nbinom
+#' @exportS3Method sufficientT trunc_nbinom
 sufficientT.trunc_nbinom <- function(y) {
   suff.T <- y
 }
@@ -87,7 +87,7 @@ parameters2natural.parms_nbinom <- function(parms, ...) {
   eta <- prepEta(log(mean), class(parms))
 }
 
-#' @method getGradETinv parms_nbinom
+#' @exportS3Method getGradETinv parms_nbinom
 getGradETinv.parms_nbinom <- function(eta, r = 1e3, ...) {
   # eta: Natural parameter
   # return the inverse of E.T differentiated with respect to eta
@@ -97,7 +97,7 @@ getGradETinv.parms_nbinom <- function(eta, r = 1e3, ...) {
   return(A)
 }
 
-#' @method getYseq trunc_nbinom
+#' @exportS3Method getYseq trunc_nbinom
 getYseq.trunc_nbinom <- function(y, y.min = 0, y.max, n = 100) {
   mean <- mean(y, na.rm = TRUE)
   var.y <- var(y, na.rm = TRUE)
